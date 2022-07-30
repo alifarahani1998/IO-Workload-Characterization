@@ -4,7 +4,7 @@ import numpy as np
 import time
 from datetime import datetime
 import re
-from collections import deque
+# from collections import deque
 
 
 
@@ -139,20 +139,23 @@ starting_sectors = [int(i) for i in starting_sectors]
 # stat for all IOs
 
 with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'w') as f:
-    f.write('Number of reads: %d\n' % read_count)
-    f.write('Number of writes: %d\n' % write_count)
-    f.write('Size of reads: %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n' % (read_sectors, sectors_to_kb(read_sectors), sectors_to_mb(read_sectors), sectors_to_gb(read_sectors), sectors_to_tb(read_sectors)))
-    f.write('Size of writes: %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n' % (write_sectors, sectors_to_kb(write_sectors), sectors_to_mb(write_sectors), sectors_to_gb(write_sectors), sectors_to_tb(write_sectors)))
-    f.write('Total size of requested sectors: %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n' % (read_sectors+write_sectors, sectors_to_kb(read_sectors+write_sectors), sectors_to_mb(read_sectors+write_sectors), sectors_to_gb(read_sectors+write_sectors), sectors_to_tb(read_sectors+write_sectors)))
-    f.write('Read percentage: {:.2%}\n'.format(read_count / total_requests))
-    f.write('Write percentage: {:.2%}\n'.format(write_count / total_requests))
+    f.write('Number of READs: %d\n' % read_count)
+    f.write('Number of WRITEs: %d\n' % write_count)
+    f.write('READ size: %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n' % (read_sectors, sectors_to_kb(read_sectors), sectors_to_mb(read_sectors), sectors_to_gb(read_sectors), sectors_to_tb(read_sectors)))
+    f.write('WRITE size: %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n' % (write_sectors, sectors_to_kb(write_sectors), sectors_to_mb(write_sectors), sectors_to_gb(write_sectors), sectors_to_tb(write_sectors)))
+    f.write('Total size of requested sectors (READ + WRITE): %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n' % (read_sectors+write_sectors, sectors_to_kb(read_sectors+write_sectors), sectors_to_mb(read_sectors+write_sectors), sectors_to_gb(read_sectors+write_sectors), sectors_to_tb(read_sectors+write_sectors)))
+    f.write('READ percentage: {:.2%}\n'.format(read_count / total_requests))
+    f.write('WRITE percentage: {:.2%}\n'.format(write_count / total_requests))
 
-    f.write('Maximum address (sector offset): %d GB\n' % sectors_to_gb(max(starting_sectors)))
-    f.write('Minimum address (sector offset): %d GB\n' % sectors_to_gb(min(starting_sectors)))
+    f.write('Average READ size: %0.2f KB\n' % sectors_to_kb(read_sectors / read_count))
+    f.write('Average WRITE size: %0.2f KB\n' % sectors_to_kb(write_sectors / write_count))
+
+    f.write('Maximum requested address (sector offset): %d GB\n' % sectors_to_gb(max(starting_sectors)))
+    f.write('Minimum requested address (sector offset): %d GB\n' % sectors_to_gb(min(starting_sectors)))
 
 
 
-# plotting R/W percentage pie chart for R/W
+# plotting R/W percentage pie chart
 
 items = [read_count, write_count]
 my_labels = '#Reads', '#Writes'
@@ -190,7 +193,7 @@ plt.savefig('2.png', dpi=300)
 plt.close()
 
 with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'a') as f:
-    f.write('\n\t   ***Distribution of I/O Sizes***\n')
+    f.write('\n\t   ***Distribution of I/O Requests (total R/W)***\n')
     f.write('\tI/O Size (KB)\t\tFrequency (%)\n\t-------------\t\t-------------\n')
     f.write('\t    [1-4]\t\t    %0.1f\n' % sector_range['1-4'])
     f.write('\t    [4-8]\t\t    %0.1f\n' % sector_range['4-8'])
@@ -213,15 +216,15 @@ for key in write_range:
     write_range[key] = round(write_range[key] / total_requests * 100, 2)
 
 labels = list(read_range.keys())
-men_means = list(read_range.values())
-women_means = list(write_range.values())
+read_means = list(read_range.values())
+write_means = list(write_range.values())
 
 x = np.arange(len(labels))  # the label locations
-width = 0.25  # the width of the bars
+width = 0.4  # the width of the bars
 
 fig, ax = plt.subplots()
-rects1 = ax.bar(x - width/2, men_means, width, label='Read')
-rects2 = ax.bar(x + width/2, women_means, width, label='Write')
+rects1 = ax.bar(x - width/2, read_means, width, label='READ')
+rects2 = ax.bar(x + width/2, write_means, width, label='WRITE')
 
 # Add some text for labels, title and custom x-axis tick labels, etc.
 ax.set_ylabel('Frequency (%)\n', fontweight='bold')
@@ -231,8 +234,8 @@ ax.set_xticks(x, labels)
 ax.set_ylim([0, 100])
 ax.legend()
 
-ax.bar_label(rects1, padding=3, color='r')
-ax.bar_label(rects2, padding=3, color='r')
+ax.bar_label(rects1, padding=3, color='blue')
+ax.bar_label(rects2, padding=3, color='orange')
 
 # fig.tight_layout()
 
@@ -241,7 +244,7 @@ plt.savefig('3.png', dpi=300)
 plt.close()
 
 with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'a') as f:
-    f.write('\n\t***Distribution of I/O Sizes (READ)***\n')
+    f.write('\n\t***Distribution of I/O Requests (READ)***\n')
     f.write('\tI/O Size (KB)\t\tFrequency (%)\n\t-------------\t\t-------------\n')
     f.write('\t    [1-4]\t\t    %0.1f\n' % read_range['1-4'])
     f.write('\t    [4-8]\t\t    %0.1f\n' % read_range['4-8'])
@@ -254,7 +257,7 @@ with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'a') as f
     f.write('\t    [64-128]\t\t    %0.1f\n' % read_range['64-128'])
     f.write('\t    [>128]\t\t    %0.1f\n' % read_range['>128'])
 
-    f.write('\n\t***Distribution of I/O Sizes (WRITE)***\n')
+    f.write('\n\t***Distribution of I/O Requests (WRITE)***\n')
     f.write('\tI/O Size (KB)\t\tFrequency (%)\n\t-------------\t\t-------------\n')
     f.write('\t    [1-4]\t\t    %0.1f\n' % write_range['1-4'])
     f.write('\t    [4-8]\t\t    %0.1f\n' % write_range['4-8'])
@@ -272,30 +275,30 @@ with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'a') as f
 
 # reuse distance
 
-reuse_dis_dic = {}   # dictionary of lists >> key shows address and values show reuse distance
-reuse_dis_stack = deque()
+# reuse_dis_dic = {}   # dictionary of lists >> key shows address and values show reuse distance
+# reuse_dis_stack = deque()
 
-for item in starting_sectors:
-    counter = 0
-    temp_list = []
-    for i in reuse_dis_stack:
-        if i == item:
-            while reuse_dis_stack[-1] != item:
-                temp_list.append(reuse_dis_stack.pop())
-                counter += 1
-            reuse_dis_dic[str(item)].append(counter)
-            reuse_dis_stack.pop()
-            temp_list.reverse()
-            for j in temp_list:
-                reuse_dis_stack.append(j)
-            reuse_dis_stack.append(item)
-            break
-    if counter == 0:
-        reuse_dis_dic[str(item)] = [-1]
-        reuse_dis_stack.append(item)
+# for item in starting_sectors:
+#     counter = 0
+#     temp_list = []
+#     for i in reuse_dis_stack:
+#         if i == item:
+#             while reuse_dis_stack[-1] != item:
+#                 temp_list.append(reuse_dis_stack.pop())
+#                 counter += 1
+#             reuse_dis_dic[str(item)].append(counter)
+#             reuse_dis_stack.pop()
+#             temp_list.reverse()
+#             for j in temp_list:
+#                 reuse_dis_stack.append(j)
+#             reuse_dis_stack.append(item)
+#             break
+#     if counter == 0:
+#         reuse_dis_dic[str(item)] = [-1]
+#         reuse_dis_stack.append(item)
         
 
-print(reuse_dis_dic)
+# print(reuse_dis_dic)
 
 
 
