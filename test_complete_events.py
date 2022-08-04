@@ -138,20 +138,20 @@ starting_sectors = [int(i) for i in starting_sectors]
 
 # stat for all IOs
 
-with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'w') as f:
-    f.write('Number of READs: %d\n' % read_count)
-    f.write('Number of WRITEs: %d\n' % write_count)
-    f.write('READ size: %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n' % (read_sectors, sectors_to_kb(read_sectors), sectors_to_mb(read_sectors), sectors_to_gb(read_sectors), sectors_to_tb(read_sectors)))
-    f.write('WRITE size: %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n' % (write_sectors, sectors_to_kb(write_sectors), sectors_to_mb(write_sectors), sectors_to_gb(write_sectors), sectors_to_tb(write_sectors)))
-    f.write('Total size of requested sectors (READ + WRITE): %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n' % (read_sectors+write_sectors, sectors_to_kb(read_sectors+write_sectors), sectors_to_mb(read_sectors+write_sectors), sectors_to_gb(read_sectors+write_sectors), sectors_to_tb(read_sectors+write_sectors)))
-    f.write('READ percentage: {:.2%}\n'.format(read_count / total_requests))
-    f.write('WRITE percentage: {:.2%}\n'.format(write_count / total_requests))
+with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
+    f.write('Number of READs: %d\n\n' % read_count)
+    f.write('Number of WRITEs: %d\n\n' % write_count)
+    f.write('READ size: %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n\n' % (read_sectors, sectors_to_kb(read_sectors), sectors_to_mb(read_sectors), sectors_to_gb(read_sectors), sectors_to_tb(read_sectors)))
+    f.write('WRITE size: %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n\n' % (write_sectors, sectors_to_kb(write_sectors), sectors_to_mb(write_sectors), sectors_to_gb(write_sectors), sectors_to_tb(write_sectors)))
+    f.write('Total size of requested sectors (READ + WRITE): %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n\n' % (read_sectors+write_sectors, sectors_to_kb(read_sectors+write_sectors), sectors_to_mb(read_sectors+write_sectors), sectors_to_gb(read_sectors+write_sectors), sectors_to_tb(read_sectors+write_sectors)))
+    f.write('READ percentage: {:.2%}\n\n'.format(read_count / total_requests))
+    f.write('WRITE percentage: {:.2%}\n\n'.format(write_count / total_requests))
 
-    f.write('Average READ size: %0.2f KB\n' % sectors_to_kb(read_sectors / read_count))
-    f.write('Average WRITE size: %0.2f KB\n' % sectors_to_kb(write_sectors / write_count))
+    f.write('Average READ size: %0.2f KB\n\n' % sectors_to_kb(read_sectors / read_count))
+    f.write('Average WRITE size: %0.2f KB\n\n' % sectors_to_kb(write_sectors / write_count))
 
-    f.write('Maximum requested address (sector offset): %d GB\n' % sectors_to_gb(max(starting_sectors)))
-    f.write('Minimum requested address (sector offset): %d GB\n' % sectors_to_gb(min(starting_sectors)))
+    f.write('Maximum requested address (sector offset): %d GB\n\n' % sectors_to_gb(max(starting_sectors)))
+    f.write('Minimum requested address (sector offset): %d GB\n\n' % sectors_to_gb(min(starting_sectors)))
 
 
 
@@ -192,7 +192,7 @@ plt.gcf().set_size_inches(20, 10)
 plt.savefig('2.png', dpi=300) 
 plt.close()
 
-with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'a') as f:
+with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
     f.write('\n\t   ***Distribution of I/O Requests (total R/W)***\n')
     f.write('\tI/O Size (KB)\t\tFrequency (%)\n\t-------------\t\t-------------\n')
     f.write('\t    [1-4]\t\t    %0.1f\n' % sector_range['1-4'])
@@ -243,8 +243,8 @@ plt.gcf().set_size_inches(20, 10)
 plt.savefig('3.png', dpi=300) 
 plt.close()
 
-with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'a') as f:
-    f.write('\n\t***Distribution of I/O Requests (READ)***\n')
+with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
+    f.write('\n\n\t***Distribution of I/O Requests (READ)***\n')
     f.write('\tI/O Size (KB)\t\tFrequency (%)\n\t-------------\t\t-------------\n')
     f.write('\t    [1-4]\t\t    %0.1f\n' % read_range['1-4'])
     f.write('\t    [4-8]\t\t    %0.1f\n' % read_range['4-8'])
@@ -257,7 +257,7 @@ with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'a') as f
     f.write('\t    [64-128]\t\t    %0.1f\n' % read_range['64-128'])
     f.write('\t    [>128]\t\t    %0.1f\n' % read_range['>128'])
 
-    f.write('\n\t***Distribution of I/O Requests (WRITE)***\n')
+    f.write('\n\n\t***Distribution of I/O Requests (WRITE)***\n')
     f.write('\tI/O Size (KB)\t\tFrequency (%)\n\t-------------\t\t-------------\n')
     f.write('\t    [1-4]\t\t    %0.1f\n' % write_range['1-4'])
     f.write('\t    [4-8]\t\t    %0.1f\n' % write_range['4-8'])
@@ -342,7 +342,7 @@ plt.close()
 
 
 
-with open('%s_%s_2.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'w') as f:
+with open('%s_%s_2.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
     f.write('\t\t***Access Frequency of I/Os***\n')
     f.write('\tAddress (sector offset)\t\tNumber of I/O Requests\n\t-----------------------\t\t----------------------\n')
     for key in dic_duplicated:
@@ -404,8 +404,8 @@ plt.savefig('5.png', dpi=300)
 plt.close()
 
 
-with open('%s_%s_2.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'a') as f:
-    f.write('\n\t  ***Cumulative Distribution Function (CDF)***\n')
+with open('%s_%s_2.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
+    f.write('\n\n\t  ***Cumulative Distribution Function (CDF)***\n')
     f.write('\tFrequency Range\t\tDistribution of Range (%)\n\t---------------\t\t-------------------------\n')
     f.write('\t    [1-50]\t\t\t%0.1f\n' % dup_range['1-50'])
     f.write('\t    [50-100]\t\t\t%0.1f\n' % dup_range['50-100'])
@@ -419,4 +419,4 @@ with open('%s_%s_2.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'a') as f
 
 
 
-with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H:%M}".format(now)), 'r+') as f: s = f.read(); f.seek(0); f.write('*** Total execution time: %0.2f seconds ***\n' % round(time.time() - start_time, 2) + s)
+with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'r+') as f: s = f.read(); f.seek(0); f.write('*** Total execution time: %0.2f seconds ***\n\n' % round(time.time() - start_time, 2) + s)
