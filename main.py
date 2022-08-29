@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 import re
 # from collections import deque
-
+from pygooglechart import PieChart3D
 
 
 input_file = input('Enter the name of trace (input) file: ')
@@ -66,18 +66,18 @@ write_range = {
 
 
 def sectors_to_kb(value):
-    return round(value * 512 / 1024, 2)
+    return round(value * 512 / 1024, 1)
 
 
 def sectors_to_mb(value):
-    return round(value * 512 / 1048576, 2)
+    return round(value * 512 / 1048576, 1)
 
 
 def sectors_to_gb(value):
-    return round(value * 512 / 1073741824, 2)
+    return round(value * 512 / 1073741824, 1)
 
 def sectors_to_tb(value):
-    return round(value * 512 / 1099511627776, 2)
+    return round(value * 512 / 1099511627776, 1)
 
 
 def compare_size(value):
@@ -141,20 +141,20 @@ starting_sectors = [int(i) for i in starting_sectors]
 with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
     f.write('Number of READs: %d\n\n' % read_count)
     f.write('Number of WRITEs: %d\n\n' % write_count)
-    f.write('READ size: %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n\n' % (read_sectors, sectors_to_kb(read_sectors), sectors_to_mb(read_sectors), sectors_to_gb(read_sectors), sectors_to_tb(read_sectors)))
-    f.write('WRITE size: %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n\n' % (write_sectors, sectors_to_kb(write_sectors), sectors_to_mb(write_sectors), sectors_to_gb(write_sectors), sectors_to_tb(write_sectors)))
-    f.write('Total size of requested sectors (READ + WRITE): %d sectors (%0.2f KB) (%0.2f MB) (%0.2f GB) (%0.2f TB)\n\n' % (read_sectors+write_sectors, sectors_to_kb(read_sectors+write_sectors), sectors_to_mb(read_sectors+write_sectors), sectors_to_gb(read_sectors+write_sectors), sectors_to_tb(read_sectors+write_sectors)))
-    f.write('READ percentage: {:.2%}\n\n'.format(read_count / total_requests))
-    f.write('WRITE percentage: {:.2%}\n\n'.format(write_count / total_requests))
+    f.write('READ size: %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' % (read_sectors, sectors_to_kb(read_sectors), sectors_to_mb(read_sectors), sectors_to_gb(read_sectors), sectors_to_tb(read_sectors)))
+    f.write('WRITE size: %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' % (write_sectors, sectors_to_kb(write_sectors), sectors_to_mb(write_sectors), sectors_to_gb(write_sectors), sectors_to_tb(write_sectors)))
+    f.write('Total size of requested sectors (READ + WRITE): %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' % (read_sectors+write_sectors, sectors_to_kb(read_sectors+write_sectors), sectors_to_mb(read_sectors+write_sectors), sectors_to_gb(read_sectors+write_sectors), sectors_to_tb(read_sectors+write_sectors)))
+    f.write('READ percentage: {:.1%}\n\n'.format(read_count / total_requests))
+    f.write('WRITE percentage: {:.1%}\n\n'.format(write_count / total_requests))
 
     if read_count != 0:
-        f.write('Average READ size: %0.2f KB\n\n' % sectors_to_kb(read_sectors / read_count))
+        f.write('Average READ size: %0.1f KB\n\n' % sectors_to_kb(read_sectors / read_count))
     else:
         f.write('Average READ size: 0 KB\n\n')
 
 
     if write_count != 0:
-        f.write('Average WRITE size: %0.2f KB\n\n' % sectors_to_kb(write_sectors / write_count))
+        f.write('Average WRITE size: %0.1f KB\n\n' % sectors_to_kb(write_sectors / write_count))
     else:
         f.write('Average WRITE size: 0 KB\n\n')
 
@@ -164,22 +164,37 @@ with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f
 
 
 # Pie chart
-labels = ['READ', 'WRITE']
+labels = ['Read', 'Write']
 sizes = [read_count, write_count]
 
 fig1, ax1 = plt.subplots()
-ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, textprops={'fontsize': 17})
+ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, textprops={'fontsize': 20}, colors=['#0000ff', '#ff0000'])
 
 # Equal aspect ratio ensures that pie is drawn as a circle
 ax1.axis('equal')
 plt.tight_layout()
-plt.savefig('1.png', dpi=300) 
+plt.gcf().set_size_inches(12, 6)
+plt.savefig('2d_pie.png', dpi=60) 
 plt.close()
 
 
 
+# 3d pie chart
+
+chart = PieChart3D(600, 300)
+
+chart.add_data([read_count, write_count])
+
+chart.set_colours(['1e12c4', 'db2121'])
+chart.title = 'Read/Write Percentage'
+
+chart.set_pie_labels(['Read: {:.1%}'.format(read_count / total_requests), 'Write: {:.1%}'.format(write_count / total_requests)])
+chart.set_title_style(font_size=20)
+chart.download('3d_pie.png')
+
+
 for key in sector_range:
-    sector_range[key] = round(sector_range[key] / total_requests * 100, 2)
+    sector_range[key] = round(sector_range[key] / total_requests * 100, 1)
 
 
 
@@ -201,7 +216,7 @@ plt.ylabel('Frequency (%)', fontweight='bold', fontsize=20.0)
 plt.title('Distribution of I/O Sizes', fontweight='bold', fontsize=20.0)
 
 plt.tight_layout()
-plt.savefig('2.png', dpi=60) 
+plt.savefig('mixed_rw_bar.png', dpi=60) 
 plt.close()
 
 
@@ -223,10 +238,10 @@ with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f
 
 
 for key in read_range:
-    read_range[key] = round(read_range[key] / total_requests * 100, 2)
+    read_range[key] = round(read_range[key] / total_requests * 100, 1)
 
 for key in write_range:
-    write_range[key] = round(write_range[key] / total_requests * 100, 2)
+    write_range[key] = round(write_range[key] / total_requests * 100, 1)
 
 
 
@@ -255,7 +270,7 @@ ax.bar_label(rects2, padding=3, fmt=' %g', color='orange')
 fig.tight_layout()
 
 plt.gcf().set_size_inches(12, 6)
-plt.savefig('3.png', dpi=60) 
+plt.savefig('separated_rw_bar.png', dpi=60) 
 plt.close()
 
 
@@ -351,7 +366,7 @@ plt.ylabel('Number of I/O Requests', fontweight='bold', fontsize=20.0)
 plt.title('Access Frequency of I/Os', fontweight='bold', fontsize=20.0)
 plt.tight_layout()
 plt.gcf().set_size_inches(12, 6)
-plt.savefig('4.png', dpi=60) 
+plt.savefig('access_freq.png', dpi=60) 
 plt.close()
 
 
@@ -398,7 +413,7 @@ def cdf_freq_range(fn, s, e, i):
             dup_range['>%d' %e] += 1
 
     for key in dup_range:
-        dup_range[key] = round(dup_range[key] / len(dic_duplicated) * 100, 2)
+        dup_range[key] = round(dup_range[key] / len(dic_duplicated) * 100, 1)
 
 
     with open('%s_%s_2.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
@@ -430,7 +445,7 @@ def cdf_freq_range(fn, s, e, i):
     plt.title('Cumulative Distribution Function (CDF)\n', fontweight='bold', fontsize=20.0)
     plt.tight_layout()
     plt.gcf().set_size_inches(12, 6)
-    plt.savefig('%d.png' % fn, dpi=60) 
+    plt.savefig('%d_cdf.png' % fn, dpi=60) 
     plt.close()
 
     for key in dup_range:
@@ -443,4 +458,4 @@ cdf_freq_range(5, 1, 300, 49)
 
 
 
-with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'r+') as f: s = f.read(); f.seek(0); f.write('*** Total execution time: %0.2f seconds ***\n\n' % round(time.time() - start_time, 2) + s)
+with open('%s_%s_1.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'r+') as f: s = f.read(); f.seek(0); f.write('*** Total execution time: %0.1f seconds ***\n\n' % round(time.time() - start_time, 2) + s)
