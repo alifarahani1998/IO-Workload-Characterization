@@ -353,23 +353,6 @@ for item in starting_sectors:
 dic_duplicated = {str(key): value for key, value in dic_duplicated.items()}
 
 
-plt.rcParams.update({'font.size': 15.0, 'font.weight': 'bold'})
-
-plt.bar(list(dic_duplicated.keys()), list(dic_duplicated.values()), color ='black', width = 0.2)
-
-plt.ylim([0, max(dic_duplicated.values())])
-
-plt.xlabel('Address Range (sector offset)', fontweight='bold', fontsize=20.0)
-
-plt.ylabel('Number of I/O Requests', fontweight='bold', fontsize=20.0)
-
-plt.title('Access Frequency of I/Os', fontweight='bold', fontsize=20.0)
-plt.tight_layout()
-plt.gcf().set_size_inches(12, 6)
-plt.savefig('access_freq.png', dpi=60) 
-plt.close()
-
-
 
 with open('%s_%s_2.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
     f.write('\t\t***Access Frequency of I/Os***\n')
@@ -453,8 +436,25 @@ def cdf_freq_range(fn, s, e, i):
             splitted = key.split('-')
             cdf_freq_range(fn + 1, int(splitted[0]), int(splitted[1]), (int(splitted[1])/5)-1)
 
-cdf_freq_range(5, 1, 300, 49)
+cdf_freq_range(1, 1, 300, 49)
 
+
+
+plt.rcParams.update({'font.size': 15.0, 'font.weight': 'bold'})
+
+plt.bar(list(dic_duplicated.keys()), list(dic_duplicated.values()), color ='black', width = 0.2)
+
+plt.ylim([0, max(dic_duplicated.values())])
+
+plt.xlabel('Address Range (sector offset)', fontweight='bold', fontsize=20.0)
+
+plt.ylabel('Number of I/O Requests', fontweight='bold', fontsize=20.0)
+
+plt.title('Access Frequency of I/Os', fontweight='bold', fontsize=20.0)
+plt.tight_layout()
+plt.gcf().set_size_inches(12, 6)
+plt.savefig('access_freq.png', dpi=60) 
+plt.close()
 
 
 
