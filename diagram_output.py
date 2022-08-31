@@ -2,7 +2,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import time
-from datetime import datetime
 import re
 # from collections import deque
 from pygooglechart import PieChart3D
@@ -169,6 +168,7 @@ for key in sector_range:
     sector_range[key] = round(sector_range[key] / total_requests * 100, 1)
 
 
+# Mixed R/W IO sizes diagram
 
 plt.rcParams.update({'font.size': 15.0, 'font.weight': 'bold'})
 plt.rcParams['figure.figsize'] = [12, 6]
@@ -200,6 +200,7 @@ for key in write_range:
     write_range[key] = round(write_range[key] / total_requests * 100, 1)
 
 
+# separated R/W IO sizes diagram
 
 labels = list(read_range.keys())
 read_means = list(read_range.values())
@@ -264,13 +265,12 @@ plt.close()
 
 starting_sectors = sorted(starting_sectors)
 dic_duplicated = {}
-empty_list = []
+
 for item in starting_sectors:
     if not item in dic_duplicated:
         dic_duplicated[item] = 1
     else:
         dic_duplicated[item] += 1
-    empty_list.append(' ')
 
 dic_duplicated = {str(key): value for key, value in dic_duplicated.items()}
 
@@ -341,6 +341,7 @@ def cdf_freq_range(fn, s, e, i):
 cdf_freq_range(1, 1, 300, 49)
 
 
+# access frequency (TWSD) diagram
 
 plt.rcParams.update({'font.size': 15.0, 'font.weight': 'bold'})
 
@@ -352,8 +353,10 @@ plt.xlabel('Address Range (sector offset)', fontweight='bold', fontsize=20.0)
 
 plt.ylabel('Number of I/O Requests', fontweight='bold', fontsize=20.0)
 
+
 plt.title('Access Frequency of I/Os', fontweight='bold', fontsize=20.0)
 plt.tight_layout()
+plt.xticks([])
 plt.gcf().set_size_inches(12, 6)
 plt.savefig('diagram_results/access_freq.png', dpi=60) 
 plt.close()
