@@ -323,11 +323,11 @@ def cdf_freq_range(fn, s, e, i):
         if dup_range[key] != 0:
             plt.text(key, dup_range[key], dup_range[key], ha = 'center', color='red')
 
-    plt.xlabel('\nFrequency Range', fontweight='bold', fontsize=20.0)
+    plt.xlabel('Frequency Range', fontweight='bold', fontsize=20.0)
 
-    plt.ylabel('Distribution of Range (%)\n', fontweight='bold', fontsize=20.0)
+    plt.ylabel('Distribution of Range (%)', fontweight='bold', fontsize=20.0)
 
-    plt.title('Cumulative Distribution Function (CDF)\n', fontweight='bold', fontsize=20.0)
+    plt.title('Cumulative Distribution Function (CDF)', fontweight='bold', fontsize=20.0)
     plt.tight_layout()
     plt.gcf().set_size_inches(12, 6)
     plt.savefig('diagram_results/%d_cdf.png' % fn, dpi=60) 

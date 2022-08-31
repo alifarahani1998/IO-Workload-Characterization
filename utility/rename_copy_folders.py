@@ -1,8 +1,8 @@
 import os
 import shutil
 
-source_folder = 'F:\Academics\M.Sc. Thesis\Datasets\MATLAB\FaceDetectionOpenCV\lfw_funneled'
-destination_folder = 'F:\Academics\M.Sc. Thesis\Datasets\MATLAB\FaceDetectionOpenCV\lfw_funneled_new'
+source_folder = 'F:\Academics\MATLAB\FaceDetectionOpenCV\lfw_funneled'
+destination_folder = 'F:\Academics\MATLAB\FaceDetectionOpenCV\lfw_funneled_new'
 
 
 def rename_copy_folder(repeat):
@@ -22,6 +22,6 @@ def rename_copy_folder(repeat):
     shutil.copytree(source_folder, destination_folder, dirs_exist_ok=True)
     
 
-for i in range(1, 858):
+for i in range(1, 3):
     rename_copy_folder(i)
 
