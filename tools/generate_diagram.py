@@ -10,7 +10,7 @@ from pygooglechart import PieChart3D
 input_file = input('Enter the name of trace (input) file: ')
 start_time = time.time()
 
-df = pd.read_table('%s' % input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
+df = pd.read_table('data/%s' % input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
 
 
 total_requests = 0
@@ -132,7 +132,7 @@ for item in list(starting_sectors):
 
 starting_sectors = [int(i) for i in starting_sectors]
 
-
+print('Generating 2D pie diagram ...')
 
 # Pie chart
 labels = ['Read', 'Write']
@@ -145,10 +145,10 @@ ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, textprops={'font
 ax1.axis('equal')
 plt.tight_layout()
 plt.gcf().set_size_inches(12, 6)
-plt.savefig('diagram_results/2d_pie.png', dpi=60) 
+plt.savefig('results/diagram_results/2d_pie.png', dpi=60) 
 plt.close()
 
-
+print('Generating 3D pie diagram ...')
 
 # 3d pie chart
 
@@ -161,12 +161,14 @@ chart.title = 'Read/Write Percentage'
 
 chart.set_pie_labels(['Read: {:.1%}'.format(read_count / total_requests), 'Write: {:.1%}'.format(write_count / total_requests)])
 chart.set_title_style(font_size=20)
-chart.download('diagram_results/3d_pie.png')
+chart.download('results/diagram_results/3d_pie.png')
 
 
 for key in sector_range:
     sector_range[key] = round(sector_range[key] / total_requests * 100, 1)
 
+
+print('Generating mixed_rw_bar diagram ...')
 
 # Mixed R/W IO sizes diagram
 
@@ -188,7 +190,7 @@ plt.ylabel('Frequency (%)', fontweight='bold', fontsize=20.0)
 plt.title('Distribution of I/O Sizes', fontweight='bold', fontsize=20.0)
 
 plt.tight_layout()
-plt.savefig('diagram_results/mixed_rw_bar.png', dpi=60) 
+plt.savefig('results/diagram_results/mixed_rw_bar.png', dpi=60) 
 plt.close()
 
 
@@ -199,6 +201,7 @@ for key in read_range:
 for key in write_range:
     write_range[key] = round(write_range[key] / total_requests * 100, 1)
 
+print('Generating separated_rw_bar diagram ...')
 
 # separated R/W IO sizes diagram
 
@@ -227,37 +230,8 @@ ax.bar_label(rects2, padding=3, fmt=' %g', color='orange')
 fig.tight_layout()
 
 plt.gcf().set_size_inches(12, 6)
-plt.savefig('diagram_results/separated_rw_bar.png', dpi=60) 
+plt.savefig('results/diagram_results/separated_rw_bar.png', dpi=60) 
 plt.close()
-
-
-
-# reuse distance
-
-# reuse_dis_dic = {}   # dictionary of lists >> key shows address and values show reuse distance
-# reuse_dis_stack = deque()
-
-# for item in starting_sectors:
-#     counter = 0
-#     temp_list = []
-#     for i in reuse_dis_stack:
-#         if i == item:
-#             while reuse_dis_stack[-1] != item:
-#                 temp_list.append(reuse_dis_stack.pop())
-#                 counter += 1
-#             reuse_dis_dic[str(item)].append(counter)
-#             reuse_dis_stack.pop()
-#             temp_list.reverse()
-#             for j in temp_list:
-#                 reuse_dis_stack.append(j)
-#             reuse_dis_stack.append(item)
-#             break
-#     if counter == 0:
-#         reuse_dis_dic[str(item)] = [-1]
-#         reuse_dis_stack.append(item)  
-
-# print(reuse_dis_dic)
-
 
 
 
@@ -330,7 +304,7 @@ def cdf_freq_range(fn, s, e, i):
     plt.title('Cumulative Distribution Function (CDF)', fontweight='bold', fontsize=20.0)
     plt.tight_layout()
     plt.gcf().set_size_inches(12, 6)
-    plt.savefig('diagram_results/%d_cdf.png' % fn, dpi=60) 
+    plt.savefig('results/diagram_results/%d_cdf.png' % fn, dpi=60) 
     plt.close()
 
     for key in dup_range:
@@ -338,8 +312,12 @@ def cdf_freq_range(fn, s, e, i):
             splitted = key.split('-')
             cdf_freq_range(fn + 1, int(splitted[0]), int(splitted[1]), (int(splitted[1])/5)-1)
 
+print('Generating cdf diagrams ...')
+
 cdf_freq_range(1, 1, 300, 49)
 
+
+print('Generating access_freq diagram ...')
 
 # access frequency (TWSD) diagram
 
@@ -358,7 +336,7 @@ plt.title('Access Frequency of I/Os', fontweight='bold', fontsize=20.0)
 plt.tight_layout()
 plt.xticks([])
 plt.gcf().set_size_inches(12, 6)
-plt.savefig('diagram_results/access_freq.png', dpi=60) 
+plt.savefig('results/diagram_results/access_freq.png', dpi=60) 
 plt.close()
 
 

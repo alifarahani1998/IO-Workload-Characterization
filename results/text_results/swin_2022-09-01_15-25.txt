@@ -1,4 +1,4 @@
-*** Total execution time: 3.9 seconds ***
+*** Total execution time: 399.4 seconds ***
 
 Number of Read requests: 85257
 
