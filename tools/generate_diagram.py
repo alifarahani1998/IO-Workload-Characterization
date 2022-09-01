@@ -10,12 +10,10 @@ from pygooglechart import PieChart3D
 input_file = input('Enter the name of trace (input) file: ')
 start_time = time.time()
 
-df = pd.read_table('data/%s' % input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
+df = pd.read_table('../data/%s' % input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
 
 
 total_requests = 0
-read_sectors = 0
-write_sectors = 0
 read_count = 0
 write_count = 0
 
@@ -111,11 +109,9 @@ for index in df.index:
         total_requests += 1
 
         if 'R' in df['R/W'][index]:
-            read_sectors += int(df['#sectors'][index])
             read_count += 1
             read_range[compare_size(temp)] += 1
         elif 'W' in df['R/W'][index]:
-            write_sectors += int(df['#sectors'][index])                        
             write_count += 1
             write_range[compare_size(temp)] += 1
         
@@ -145,7 +141,7 @@ ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, textprops={'font
 ax1.axis('equal')
 plt.tight_layout()
 plt.gcf().set_size_inches(12, 6)
-plt.savefig('results/diagram_results/2d_pie.png', dpi=60) 
+plt.savefig('../results/diagram_results/2d_pie.png', dpi=60) 
 plt.close()
 
 print('Generating 3D pie diagram ...')
@@ -161,7 +157,7 @@ chart.title = 'Read/Write Percentage'
 
 chart.set_pie_labels(['Read: {:.1%}'.format(read_count / total_requests), 'Write: {:.1%}'.format(write_count / total_requests)])
 chart.set_title_style(font_size=20)
-chart.download('results/diagram_results/3d_pie.png')
+chart.download('../results/diagram_results/3d_pie.png')
 
 
 for key in sector_range:
@@ -190,7 +186,7 @@ plt.ylabel('Frequency (%)', fontweight='bold', fontsize=20.0)
 plt.title('Distribution of I/O Sizes', fontweight='bold', fontsize=20.0)
 
 plt.tight_layout()
-plt.savefig('results/diagram_results/mixed_rw_bar.png', dpi=60) 
+plt.savefig('../results/diagram_results/mixed_rw_bar.png', dpi=60) 
 plt.close()
 
 
@@ -230,7 +226,7 @@ ax.bar_label(rects2, padding=3, fmt=' %g', color='orange')
 fig.tight_layout()
 
 plt.gcf().set_size_inches(12, 6)
-plt.savefig('results/diagram_results/separated_rw_bar.png', dpi=60) 
+plt.savefig('../results/diagram_results/separated_rw_bar.png', dpi=60) 
 plt.close()
 
 
@@ -304,7 +300,7 @@ def cdf_freq_range(fn, s, e, i):
     plt.title('Cumulative Distribution Function (CDF)', fontweight='bold', fontsize=20.0)
     plt.tight_layout()
     plt.gcf().set_size_inches(12, 6)
-    plt.savefig('results/diagram_results/%d_cdf.png' % fn, dpi=60) 
+    plt.savefig('../results/diagram_results/cdf_%d.png' % fn, dpi=60) 
     plt.close()
 
     for key in dup_range:
@@ -336,7 +332,7 @@ plt.title('Access Frequency of I/Os', fontweight='bold', fontsize=20.0)
 plt.tight_layout()
 plt.xticks([])
 plt.gcf().set_size_inches(12, 6)
-plt.savefig('results/diagram_results/access_freq.png', dpi=60) 
+plt.savefig('../results/diagram_results/access_freq.png', dpi=60) 
 plt.close()
 
 
