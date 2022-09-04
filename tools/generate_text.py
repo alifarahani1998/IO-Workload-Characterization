@@ -11,7 +11,9 @@ app_name = input('Enter the name of traced application: ')
 now = datetime.now()
 start_time = time.time()
 
-df = pd.read_table('../data/%s' % input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
+print('Retrieving data ...')
+
+df = pd.read_table('%s' % input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
 
 
 total_requests = 0
@@ -138,7 +140,7 @@ starting_sectors = [int(i) for i in starting_sectors]
 
 # stat for all IOs
 
-with open('../results/text_results/%s_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
+with open('../results/text_results/%s_basic_results_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
     f.write('Number of Read requests: %d\n\n' % read_count)
     f.write('Number of Write requests: %d\n\n' % write_count)
     f.write('Read size: %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' % (read_sectors, sectors_to_kb(read_sectors), sectors_to_mb(read_sectors), sectors_to_gb(read_sectors), sectors_to_tb(read_sectors)))
@@ -169,7 +171,7 @@ for key in sector_range:
 
 
 
-with open('../results/text_results/%s_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
+with open('../results/text_results/%s_basic_results_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
     f.write('\n***Distribution of I/O Requests (total R/W)***\n')
     f.write('\tI/O Size (KB)\t\tFrequency (%)\n\t-------------\t\t-------------\n')
     f.write('\t    [1-4]\t\t    %0.1f\n' % sector_range['1-4'])
@@ -193,7 +195,7 @@ for key in write_range:
 
 
 
-with open('../results/text_results/%s_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
+with open('../results/text_results/%s_basic_results_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
     f.write('\n\n***Distribution of I/O Requests (Read)***\n')
     f.write('\tI/O Size (KB)\t\tFrequency (%)\n\t-------------\t\t-------------\n')
     f.write('\t    [1-4]\t\t    %0.1f\n' % read_range['1-4'])
@@ -221,7 +223,7 @@ with open('../results/text_results/%s_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".f
     f.write('\t    [>128]\t\t    %0.1f\n' % write_range['>128'])
 
 
-print('Generating CSV results ...')
+print('Generating access_freq results ...')
 
 # access frequency of IOs
 
@@ -238,7 +240,7 @@ for item in sorted_starting_sectors:
 dic_duplicated = {str(key): value for key, value in dic_duplicated.items()}
 
 
-with open('../results/text_results/%s_%s.csv' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
+with open('../results/text_results/%s_access_freq_%s.csv' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
     writer = csv.writer(f, delimiter='\t')
     for key in dic_duplicated:
         writer.writerow([key, dic_duplicated[key]])
@@ -277,7 +279,7 @@ def cdf_freq_range(fn, s, e, i):
         dup_range[key] = round(dup_range[key] / len(dic_duplicated) * 100, 1)
 
 
-    with open('../results/text_results/%s_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
+    with open('../results/text_results/%s_basic_results_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
         f.write('\n\n\t***Cumulative Distribution Function (CDF)***\n')
         f.write('\tFrequency Range\t\tDistribution of Range (%)\n\t---------------\t\t-------------------------\n')
         f.write('\t    [%d-%d]\t\t\t%0.1f\n' %(s, s+i, dup_range['%d-%d' %(s, s+i)]))
@@ -336,6 +338,6 @@ with open('../results/text_results/%s_reuse_dis_%s.txt' % (app_name, "{:%Y-%m-%d
         f.write('%s: %s\n' %(key, reuse_dis_dic[key]))
 
 
-with open('../results/text_results/%s_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'r+') as f: s = f.read(); f.seek(0); f.write('*** Total execution time: %0.1f seconds ***\n\n' % round(time.time() - start_time, 2) + s)
+with open('../results/text_results/%s_basic_results_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'r+') as f: s = f.read(); f.seek(0); f.write('*** Total execution time: %0.1f seconds ***\n\n' % round(time.time() - start_time, 2) + s)
 
 print('Total execution time: %0.1f seconds: ' % round(time.time() - start_time, 2))

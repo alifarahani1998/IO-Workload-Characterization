@@ -10,7 +10,10 @@ from pygooglechart import PieChart3D
 input_file = input('Enter the name of trace (input) file: ')
 start_time = time.time()
 
-df = pd.read_table('../data/%s' % input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
+print('Retrieving data ...')
+
+
+df = pd.read_table('%s' % input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
 
 
 total_requests = 0

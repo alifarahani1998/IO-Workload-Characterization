@@ -1,5 +1,3 @@
-*** Total execution time: 487.5 seconds ***
-
 Number of Read requests: 85257
 
 Number of Write requests: 9104
