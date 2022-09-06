@@ -7,13 +7,86 @@ import re
 from pygooglechart import PieChart3D
 
 
-input_file = input('Enter the name of trace (input) file: ')
+input_file = input('Enter trace (input) file name: ')
+iostat_file = input('Enter iostat file name (if not desired, type "no"): ')
 start_time = time.time()
 
 print('Retrieving data ...')
 
 
-df = pd.read_table('%s' % input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
+read_list = []
+write_list = []
+
+if iostat_file != 'no':
+    file = open('%s' %iostat_file, 'r')
+    lines = file.readlines()
+    for i, line in enumerate(lines):
+        if 'rMB/s' in line:
+            read_list.append(float((lines[i+1].split())[2]))
+        if 'wMB/s' in line:
+            write_list.append(float((lines[i+1].split())[8]))
+
+
+df = pd.read_table('%s' %input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
+
+# io bandwidth diagram
+
+print('Generating I/O bandwidth diagram ...')
+
+avg_read = round(sum(read_list) / len(read_list), 2)
+avg_write = round(sum(write_list) / len(write_list), 2)
+
+read_max = max(read_list)
+write_max = max(write_list)
+
+idx = []
+
+for i in range(len(read_list)):
+    if i % 60 == 0:
+        idx.append(i)
+
+new_read_list = []
+new_write_list = []
+
+for i, item in enumerate(read_list):
+    if i in idx:
+        new_read_list.append(item)
+
+for i, item in enumerate(write_list):
+    if i in idx:
+        new_write_list.append(item)
+
+
+plt.rcParams.update({'font.size': 14.0, 'font.weight': 'bold'})
+
+fig, ax = plt.subplots()
+ax.set_xlabel('Time (H)', fontweight='bold', fontsize=20.0)
+ax.set_ylabel('Bandwidth (MB/s)', fontweight='bold', fontsize=20.0)
+ax.set_title('Distribution of I/O Bandwidth', fontweight='bold', fontsize=20.0)
+
+x = np.arange(len(new_read_list))
+y = new_write_list
+z = new_read_list
+ax.set_ylim([0, max(read_max, write_max) + 20])
+props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+
+textstr = '\n'.join((
+    'Avg. Read: %1.1f MB/s' %avg_read,
+    'Avg. Write: %1.1f MB/s' %avg_write
+))
+
+ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,
+        verticalalignment='top', bbox=props)
+
+plt.plot(x, z, linestyle="-", marker="o", label="Read")
+plt.plot(x, y, linestyle="-", marker="o", label="Write")
+plt.legend(loc="upper right")
+plt.tight_layout()
+plt.gcf().set_size_inches(12, 6)
+plt.savefig('../results/diagram_results/io_bandwidth.png', dpi=60) 
+plt.close()
+
+
 
 
 total_requests = 0
@@ -303,7 +376,7 @@ def cdf_freq_range(fn, s, e, i):
     plt.title('Cumulative Distribution Function (CDF)', fontweight='bold', fontsize=20.0)
     plt.tight_layout()
     plt.gcf().set_size_inches(12, 6)
-    plt.savefig('../results/diagram_results/cdf_%d.png' % fn, dpi=60) 
+    plt.savefig('../results/diagram_results/cdf_%d.png' %fn, dpi=60) 
     plt.close()
 
     for key in dup_range:
@@ -339,4 +412,4 @@ plt.savefig('../results/diagram_results/access_freq.png', dpi=60)
 plt.close()
 
 
-print('Total execution time: %0.1f seconds: ' % round(time.time() - start_time, 2))
+print('Total execution time: %0.1f seconds: ' %round(time.time() - start_time, 2))

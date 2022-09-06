@@ -6,14 +6,14 @@ import csv
 from collections import deque
 
 
-input_file = input('Enter the name of trace (input) file: ')
+input_file = input('Enter trace (input) file name: ')
 app_name = input('Enter the name of traced application: ')
 now = datetime.now()
 start_time = time.time()
 
 print('Retrieving data ...')
 
-df = pd.read_table('%s' % input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
+df = pd.read_table('%s' %input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
 
 
 total_requests = 0
@@ -140,28 +140,28 @@ starting_sectors = [int(i) for i in starting_sectors]
 
 # stat for all IOs
 
-with open('../results/text_results/%s_basic_results_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
-    f.write('Number of Read requests: %d\n\n' % read_count)
-    f.write('Number of Write requests: %d\n\n' % write_count)
-    f.write('Read size: %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' % (read_sectors, sectors_to_kb(read_sectors), sectors_to_mb(read_sectors), sectors_to_gb(read_sectors), sectors_to_tb(read_sectors)))
-    f.write('Write size: %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' % (write_sectors, sectors_to_kb(write_sectors), sectors_to_mb(write_sectors), sectors_to_gb(write_sectors), sectors_to_tb(write_sectors)))
-    f.write('Total size of requested sectors (Reed + Write): %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' % (read_sectors+write_sectors, sectors_to_kb(read_sectors+write_sectors), sectors_to_mb(read_sectors+write_sectors), sectors_to_gb(read_sectors+write_sectors), sectors_to_tb(read_sectors+write_sectors)))
+with open('../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
+    f.write('Number of Read requests: %d\n\n' %read_count)
+    f.write('Number of Write requests: %d\n\n' %write_count)
+    f.write('Read size: %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' %(read_sectors, sectors_to_kb(read_sectors), sectors_to_mb(read_sectors), sectors_to_gb(read_sectors), sectors_to_tb(read_sectors)))
+    f.write('Write size: %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' %(write_sectors, sectors_to_kb(write_sectors), sectors_to_mb(write_sectors), sectors_to_gb(write_sectors), sectors_to_tb(write_sectors)))
+    f.write('Total size of requested sectors (Reed + Write): %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' %(read_sectors+write_sectors, sectors_to_kb(read_sectors+write_sectors), sectors_to_mb(read_sectors+write_sectors), sectors_to_gb(read_sectors+write_sectors), sectors_to_tb(read_sectors+write_sectors)))
     f.write('Read percentage: {:.1%}\n\n'.format(read_count / total_requests))
     f.write('Write percentage: {:.1%}\n\n'.format(write_count / total_requests))
 
     if read_count != 0:
-        f.write('Average Read size: %0.1f KB\n\n' % sectors_to_kb(read_sectors / read_count))
+        f.write('Average Read size: %0.1f KB\n\n' %sectors_to_kb(read_sectors / read_count))
     else:
         f.write('Average Read size: 0 KB\n\n')
 
 
     if write_count != 0:
-        f.write('Average Write size: %0.1f KB\n\n' % sectors_to_kb(write_sectors / write_count))
+        f.write('Average Write size: %0.1f KB\n\n' %sectors_to_kb(write_sectors / write_count))
     else:
         f.write('Average Write size: 0 KB\n\n')
 
-    f.write('Maximum requested address (sector offset): %d GB\n\n' % sectors_to_gb(max(starting_sectors)))
-    f.write('Minimum requested address (sector offset): %d GB\n\n' % sectors_to_gb(min(starting_sectors)))
+    f.write('Maximum requested address (sector offset): %d GB\n\n' %sectors_to_gb(max(starting_sectors)))
+    f.write('Minimum requested address (sector offset): %d GB\n\n' %sectors_to_gb(min(starting_sectors)))
 
 
 
@@ -171,19 +171,19 @@ for key in sector_range:
 
 
 
-with open('../results/text_results/%s_basic_results_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
+with open('../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
     f.write('\n***Distribution of I/O Requests (total R/W)***\n')
     f.write('\tI/O Size (KB)\t\tFrequency (%)\n\t-------------\t\t-------------\n')
-    f.write('\t    [1-4]\t\t    %0.1f\n' % sector_range['1-4'])
-    f.write('\t    [5-8]\t\t    %0.1f\n' % sector_range['5-8'])
-    f.write('\t    [9-12]\t\t    %0.1f\n' % sector_range['9-12'])
-    f.write('\t    [13-16]\t\t    %0.1f\n' % sector_range['13-16'])
-    f.write('\t    [17-20]\t\t    %0.1f\n' % sector_range['17-20'])
-    f.write('\t    [21-24]\t\t    %0.1f\n' % sector_range['21-24'])
-    f.write('\t    [25-48]\t\t    %0.1f\n' % sector_range['25-48'])
-    f.write('\t    [49-64]\t\t    %0.1f\n' % sector_range['49-64'])
-    f.write('\t    [65-128]\t\t    %0.1f\n' % sector_range['65-128'])
-    f.write('\t    [>128]\t\t    %0.1f\n' % sector_range['>128'])
+    f.write('\t    [1-4]\t\t    %0.1f\n' %sector_range['1-4'])
+    f.write('\t    [5-8]\t\t    %0.1f\n' %sector_range['5-8'])
+    f.write('\t    [9-12]\t\t    %0.1f\n' %sector_range['9-12'])
+    f.write('\t    [13-16]\t\t    %0.1f\n' %sector_range['13-16'])
+    f.write('\t    [17-20]\t\t    %0.1f\n' %sector_range['17-20'])
+    f.write('\t    [21-24]\t\t    %0.1f\n' %sector_range['21-24'])
+    f.write('\t    [25-48]\t\t    %0.1f\n' %sector_range['25-48'])
+    f.write('\t    [49-64]\t\t    %0.1f\n' %sector_range['49-64'])
+    f.write('\t    [65-128]\t\t    %0.1f\n' %sector_range['65-128'])
+    f.write('\t    [>128]\t\t    %0.1f\n' %sector_range['>128'])
 
 
 
@@ -195,32 +195,32 @@ for key in write_range:
 
 
 
-with open('../results/text_results/%s_basic_results_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
+with open('../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
     f.write('\n\n***Distribution of I/O Requests (Read)***\n')
     f.write('\tI/O Size (KB)\t\tFrequency (%)\n\t-------------\t\t-------------\n')
-    f.write('\t    [1-4]\t\t    %0.1f\n' % read_range['1-4'])
-    f.write('\t    [5-8]\t\t    %0.1f\n' % read_range['5-8'])
-    f.write('\t    [9-12]\t\t    %0.1f\n' % read_range['9-12'])
-    f.write('\t    [13-16]\t\t    %0.1f\n' % read_range['13-16'])
-    f.write('\t    [17-20]\t\t    %0.1f\n' % read_range['17-20'])
-    f.write('\t    [21-24]\t\t    %0.1f\n' % read_range['21-24'])
-    f.write('\t    [25-48]\t\t    %0.1f\n' % read_range['25-48'])
-    f.write('\t    [49-64]\t\t    %0.1f\n' % read_range['49-64'])
-    f.write('\t    [65-128]\t\t    %0.1f\n' % read_range['65-128'])
-    f.write('\t    [>128]\t\t    %0.1f\n' % read_range['>128'])
+    f.write('\t    [1-4]\t\t    %0.1f\n' %read_range['1-4'])
+    f.write('\t    [5-8]\t\t    %0.1f\n' %read_range['5-8'])
+    f.write('\t    [9-12]\t\t    %0.1f\n' %read_range['9-12'])
+    f.write('\t    [13-16]\t\t    %0.1f\n' %read_range['13-16'])
+    f.write('\t    [17-20]\t\t    %0.1f\n' %read_range['17-20'])
+    f.write('\t    [21-24]\t\t    %0.1f\n' %read_range['21-24'])
+    f.write('\t    [25-48]\t\t    %0.1f\n' %read_range['25-48'])
+    f.write('\t    [49-64]\t\t    %0.1f\n' %read_range['49-64'])
+    f.write('\t    [65-128]\t\t    %0.1f\n' %read_range['65-128'])
+    f.write('\t    [>128]\t\t    %0.1f\n' %read_range['>128'])
 
     f.write('\n\n***Distribution of I/O Requests (Write)***\n')
     f.write('\tI/O Size (KB)\t\tFrequency (%)\n\t-------------\t\t-------------\n')
-    f.write('\t    [1-4]\t\t    %0.1f\n' % write_range['1-4'])
-    f.write('\t    [5-8]\t\t    %0.1f\n' % write_range['5-8'])
-    f.write('\t    [9-12]\t\t    %0.1f\n' % write_range['9-12'])
-    f.write('\t    [13-16]\t\t    %0.1f\n' % write_range['13-16'])
-    f.write('\t    [17-20]\t\t    %0.1f\n' % write_range['17-20'])
-    f.write('\t    [21-24]\t\t    %0.1f\n' % write_range['21-24'])
-    f.write('\t    [25-48]\t\t    %0.1f\n' % write_range['25-48'])
-    f.write('\t    [49-64]\t\t    %0.1f\n' % write_range['49-64'])
-    f.write('\t    [65-128]\t\t    %0.1f\n' % write_range['65-128'])
-    f.write('\t    [>128]\t\t    %0.1f\n' % write_range['>128'])
+    f.write('\t    [1-4]\t\t    %0.1f\n' %write_range['1-4'])
+    f.write('\t    [5-8]\t\t    %0.1f\n' %write_range['5-8'])
+    f.write('\t    [9-12]\t\t    %0.1f\n' %write_range['9-12'])
+    f.write('\t    [13-16]\t\t    %0.1f\n' %write_range['13-16'])
+    f.write('\t    [17-20]\t\t    %0.1f\n' %write_range['17-20'])
+    f.write('\t    [21-24]\t\t    %0.1f\n' %write_range['21-24'])
+    f.write('\t    [25-48]\t\t    %0.1f\n' %write_range['25-48'])
+    f.write('\t    [49-64]\t\t    %0.1f\n' %write_range['49-64'])
+    f.write('\t    [65-128]\t\t    %0.1f\n' %write_range['65-128'])
+    f.write('\t    [>128]\t\t    %0.1f\n' %write_range['>128'])
 
 
 print('Generating access_freq results ...')
@@ -240,7 +240,7 @@ for item in sorted_starting_sectors:
 dic_duplicated = {str(key): value for key, value in dic_duplicated.items()}
 
 
-with open('../results/text_results/%s_access_freq_%s.csv' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
+with open('../results/text_results/%s_access_freq_%s.csv' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
     writer = csv.writer(f, delimiter='\t')
     for key in dic_duplicated:
         writer.writerow([key, dic_duplicated[key]])
@@ -279,7 +279,7 @@ def cdf_freq_range(fn, s, e, i):
         dup_range[key] = round(dup_range[key] / len(dic_duplicated) * 100, 1)
 
 
-    with open('../results/text_results/%s_basic_results_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
+    with open('../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
         f.write('\n\n\t***Cumulative Distribution Function (CDF)***\n')
         f.write('\tFrequency Range\t\tDistribution of Range (%)\n\t---------------\t\t-------------------------\n')
         f.write('\t    [%d-%d]\t\t\t%0.1f\n' %(s, s+i, dup_range['%d-%d' %(s, s+i)]))
@@ -333,11 +333,11 @@ for key, value in list(reuse_dis_dic.items()):
         value.remove(-1)
 
 
-with open('../results/text_results/%s_reuse_dis_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
+with open('../results/text_results/%s_reuse_dis_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
     for key in reuse_dis_dic:
         f.write('%s: %s\n' %(key, reuse_dis_dic[key]))
 
 
-with open('../results/text_results/%s_basic_results_%s.txt' % (app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'r+') as f: s = f.read(); f.seek(0); f.write('*** Total execution time: %0.1f seconds ***\n\n' % round(time.time() - start_time, 2) + s)
+with open('../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'r+') as f: s = f.read(); f.seek(0); f.write('*** Total execution time: %0.1f seconds ***\n\n' %round(time.time() - start_time, 2) + s)
 
-print('Total execution time: %0.1f seconds: ' % round(time.time() - start_time, 2))
+print('Total execution time: %0.1f seconds: ' %round(time.time() - start_time, 2))
