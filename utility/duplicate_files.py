@@ -1,22 +1,23 @@
 import os
 import shutil
-
-path = 'F:\Compressed\coco128\images\\train2017\\'
-
-source_folder = 'F:\Compressed\coco128\images\\train2017\\'
-destination_folder = 'F:\Compressed\coco128\images\\train\\'
+import string
 
 
-def rename_files(repeat):
+path = 'F:/test/lfw_funneled_new1/'
+
+source_folder = 'F:/test/lfw_funneled_new1/'
+destination_folder = 'F:/test/lfw_funneled_new2/'
+
+
+def rename_files(i, j):
 
     directory_list = os.listdir(path)
 
-    for i, filename in enumerate(directory_list):
+    for k, filename in enumerate(directory_list):
         
-        src_file = filename
-        dst_file = filename.removesuffix(str(filename)[repeat:]) + 'a%d' %(repeat + i) + '.jpg'
+        dst_file = '%s%s%d' %(i, j, k) + '.jpg'
 
-        os.rename(os.path.join(path, src_file), os.path.join(path, dst_file))
+        os.rename(os.path.join(path, filename), os.path.join(path, dst_file))
 
     print('renaming done!')
 
@@ -32,6 +33,16 @@ def copy_files():
     print('copying done!')
 
 
-for i in range(1, 201):
-    rename_files(i)
-    copy_files()
+for i in range(0, 44):
+    for j in range(0, 44):
+        rename_files(i, j)
+        copy_files()
+
+
+# alphabet = list(string.ascii_lowercase)
+
+# for i in alphabet:
+#     for j in alphabet:
+#         rename_files(i, j)
+#         copy_files()
+
