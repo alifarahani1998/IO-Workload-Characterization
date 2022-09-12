@@ -229,19 +229,23 @@ print('Generating access_freq results ...')
 
 sorted_starting_sectors = sorted(starting_sectors)
 dic_duplicated = {}
-empty_list = []
+
 for item in sorted_starting_sectors:
     if not item in dic_duplicated:
         dic_duplicated[item] = 1
     else:
         dic_duplicated[item] += 1
-    empty_list.append(' ')
+
+for key in dict(dic_duplicated):
+    if not dic_duplicated[key] > 1:
+        del dic_duplicated[key]
+
 
 dic_duplicated = {str(key): value for key, value in dic_duplicated.items()}
 
 
-with open('../results/text_results/%s_access_freq_%s.csv' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
-    writer = csv.writer(f, delimiter='\t')
+with open('../results/text_results/%s_access_freq_%s.csv' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w', newline='') as f:
+    writer = csv.writer(f, delimiter=',')
     for key in dic_duplicated:
         writer.writerow([key, dic_duplicated[key]])
 
@@ -298,44 +302,44 @@ def cdf_freq_range(fn, s, e, i):
 cdf_freq_range(1, 1, 300, 49)
 
 
-print('Generating reuse_distance results ...')
+# print('Generating reuse_distance results ...')
 
 
 # reuse distance
 
-reuse_dis_dic = {}   # dictionary of lists >> key shows address and values show reuse distance
-reuse_dis_stack = deque()
+# reuse_dis_dic = {}   # dictionary of lists >> key shows address and values show reuse distance
+# reuse_dis_stack = deque()
 
-for item in starting_sectors:
-    counter = 0
-    temp_list = []
-    for i in reuse_dis_stack:
-        if i == item:
-            while reuse_dis_stack[-1] != item:
-                temp_list.append(reuse_dis_stack.pop())
-                counter += 1
-            reuse_dis_dic[str(item)].append(counter)
-            reuse_dis_stack.pop()
-            temp_list.reverse()
-            for j in temp_list:
-                reuse_dis_stack.append(j)
-            reuse_dis_stack.append(item)
-            break
-    if counter == 0:
-        reuse_dis_dic[str(item)] = [-1]
-        reuse_dis_stack.append(item)
-
-
-for key, value in list(reuse_dis_dic.items()):
-    if value == [-1]:
-        del reuse_dis_dic[key]
-    else:
-        value.remove(-1)
+# for item in starting_sectors:
+#     counter = 0
+#     temp_list = []
+#     for i in reuse_dis_stack:
+#         if i == item:
+#             while reuse_dis_stack[-1] != item:
+#                 temp_list.append(reuse_dis_stack.pop())
+#                 counter += 1
+#             reuse_dis_dic[str(item)].append(counter)
+#             reuse_dis_stack.pop()
+#             temp_list.reverse()
+#             for j in temp_list:
+#                 reuse_dis_stack.append(j)
+#             reuse_dis_stack.append(item)
+#             break
+#     if counter == 0:
+#         reuse_dis_dic[str(item)] = [-1]
+#         reuse_dis_stack.append(item)
 
 
-with open('../results/text_results/%s_reuse_dis_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
-    for key in reuse_dis_dic:
-        f.write('%s: %s\n' %(key, reuse_dis_dic[key]))
+# for key, value in list(reuse_dis_dic.items()):
+#     if value == [-1]:
+#         del reuse_dis_dic[key]
+#     else:
+#         value.remove(-1)
+
+
+# with open('../results/text_results/%s_reuse_dis_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
+#     for key in reuse_dis_dic:
+#         f.write('%s: %s\n' %(key, reuse_dis_dic[key]))
 
 
 with open('../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'r+') as f: s = f.read(); f.seek(0); f.write('*** Total execution time: %0.1f seconds ***\n\n' %round(time.time() - start_time, 2) + s)

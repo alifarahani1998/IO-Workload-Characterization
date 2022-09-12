@@ -44,7 +44,7 @@ def draw_io_bandwidth():
     idx = []
 
     for i in range(len(read_list)):
-        if i % 60 == 0:
+        if i % 1 == 0:
             idx.append(i)
 
     new_read_list = []
@@ -62,7 +62,7 @@ def draw_io_bandwidth():
     plt.rcParams.update({'font.size': 14.0, 'font.weight': 'bold'})
 
     fig, ax = plt.subplots()
-    ax.set_xlabel('Time (H)', fontweight='bold', fontsize=20.0)
+    ax.set_xlabel('Time (min)', fontweight='bold', fontsize=20.0)
     ax.set_ylabel('Bandwidth (MB/s)', fontweight='bold', fontsize=20.0)
     ax.set_title('Distribution of I/O Bandwidth', fontweight='bold', fontsize=20.0)
 
@@ -323,6 +323,12 @@ for item in starting_sectors:
     else:
         dic_duplicated[item] += 1
 
+
+for key in dict(dic_duplicated):
+    if not dic_duplicated[key] > 1:
+        del dic_duplicated[key]
+
+
 dic_duplicated = {str(key): value for key, value in dic_duplicated.items()}
 
 
@@ -394,27 +400,27 @@ print('Generating cdf diagrams ...')
 cdf_freq_range(1, 1, 300, 49)
 
 
-print('Generating access_freq diagram ...')
+# print('Generating access_freq diagram ...')
 
 # access frequency (TWSD) diagram
 
-plt.rcParams.update({'font.size': 15.0, 'font.weight': 'bold'})
+# plt.rcParams.update({'font.size': 15.0, 'font.weight': 'bold'})
 
-plt.bar(list(dic_duplicated.keys()), list(dic_duplicated.values()), color ='black', width = 0.2)
+# plt.bar(list(dic_duplicated.keys()), list(dic_duplicated.values()), color ='black', width = 0.2)
 
-plt.ylim([0, max(dic_duplicated.values())])
+# plt.ylim([0, max(dic_duplicated.values())])
 
-plt.xlabel('Address Range (sector offset)', fontweight='bold', fontsize=20.0)
+# plt.xlabel('Address Range (sector offset)', fontweight='bold', fontsize=20.0)
 
-plt.ylabel('Number of I/O Requests', fontweight='bold', fontsize=20.0)
+# plt.ylabel('Number of I/O Requests', fontweight='bold', fontsize=20.0)
 
 
-plt.title('Access Frequency of I/Os', fontweight='bold', fontsize=20.0)
-plt.tight_layout()
-plt.xticks([])
-plt.gcf().set_size_inches(12, 6)
-plt.savefig('../results/diagram_results/access_freq.png', dpi=60) 
-plt.close()
+# plt.title('Access Frequency of I/Os', fontweight='bold', fontsize=20.0)
+# plt.tight_layout()
+# plt.xticks([])
+# plt.gcf().set_size_inches(12, 6)
+# plt.savefig('../results/diagram_results/access_freq.png', dpi=60) 
+# plt.close()
 
 
 print('Total execution time: %0.1f seconds: ' %round(time.time() - start_time, 2))
