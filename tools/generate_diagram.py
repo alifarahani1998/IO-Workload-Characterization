@@ -16,6 +16,8 @@ print('Retrieving data ...')
 
 read_list = []
 write_list = []
+disk_util = []
+cpu_util = []
 
 if iostat_file != 'no':
     file = open('%s' %iostat_file, 'r')
@@ -25,6 +27,10 @@ if iostat_file != 'no':
             read_list.append(float((lines[i+1].split())[2]))
         if 'wMB/s' in line:
             write_list.append(float((lines[i+1].split())[8]))
+        if 'util' in line:
+            disk_util.append(float((lines[i+1].split())[20]))
+        if 'user' in line:
+            cpu_util.append(float((lines[i+1].split())[0]))
 
 
 df = pd.read_table('%s' %input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
@@ -89,8 +95,88 @@ def draw_io_bandwidth():
     plt.close()
 
 
+
+# disk utilization diagram
+
+def disk_utilization():
+    print('Generating disk utilization diagram ...')
+
+    avg_disk_util = round(sum(disk_util) / len(disk_util), 2)
+
+    max_disk_util = max(disk_util)
+    min_disk_util = min(disk_util)
+
+    plt.rcParams.update({'font.size': 14.0, 'font.weight': 'bold'})
+
+    fig, ax = plt.subplots()
+    ax.set_xlabel('Time (min)', fontweight='bold', fontsize=20.0)
+    ax.set_ylabel('Utilization (%)', fontweight='bold', fontsize=20.0)
+    ax.set_title('Disk Utilization', fontweight='bold', fontsize=20.0)
+
+    x = np.arange(len(disk_util))
+    y = disk_util
+    ax.set_ylim([0, 100])
+    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+
+    textstr = '\n'.join((
+        'Avg. Disk Util.: %1.1f' %avg_disk_util + '%',
+        'MAX Disk Util.: %1.1f' %max_disk_util + '%',
+        'MIN Disk Util.: %1.1f' %min_disk_util + '%'
+    ))
+
+    ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,
+            verticalalignment='top', bbox=props)
+
+    plt.plot(x, y)
+    plt.tight_layout()
+    plt.gcf().set_size_inches(12, 6)
+    plt.savefig('../results/diagram_results/disk_util.png', dpi=60) 
+    plt.close()
+
+
+# cpu utilization diagram
+
+def cpu_utilization():
+    print('Generating CPU utilization diagram ...')
+
+    avg_cpu_util = round(sum(cpu_util) / len(cpu_util), 2)
+
+    max_cpu_util = max(cpu_util)
+    min_cpu_util = min(cpu_util)
+
+    plt.rcParams.update({'font.size': 14.0, 'font.weight': 'bold'})
+
+    fig, ax = plt.subplots()
+    ax.set_xlabel('Time (min)', fontweight='bold', fontsize=20.0)
+    ax.set_ylabel('Utilization (%)', fontweight='bold', fontsize=20.0)
+    ax.set_title('CPU Utilization', fontweight='bold', fontsize=20.0)
+
+    x = np.arange(len(cpu_util))
+    y = cpu_util
+    ax.set_ylim([0, 100])
+    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+
+    textstr = '\n'.join((
+        'Avg. cpu Util.: %1.1f' %avg_cpu_util + '%',
+        'MAX cpu Util.: %1.1f' %max_cpu_util + '%',
+        'MIN cpu Util.: %1.1f' %min_cpu_util + '%'
+    ))
+
+    ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,
+            verticalalignment='top', bbox=props)
+
+    plt.plot(x, y)
+    plt.tight_layout()
+    plt.gcf().set_size_inches(12, 6)
+    plt.savefig('../results/diagram_results/cpu_util.png', dpi=60) 
+    plt.close()
+
+
+
 if iostat_file != 'no':
     draw_io_bandwidth()
+    disk_utilization()
+    cpu_utilization()
 
 
 
