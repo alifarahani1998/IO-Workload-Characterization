@@ -6,7 +6,7 @@ import csv
 from collections import deque
 
 
-input_file = input('Enter trace (input) file name: ')
+input_file = input('Enter trace (input) file path: ')
 app_name = input('Enter the name of traced application: ')
 now = datetime.now()
 start_time = time.time()

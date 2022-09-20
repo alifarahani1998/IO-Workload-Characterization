@@ -7,8 +7,8 @@ import re
 from pygooglechart import PieChart3D
 
 
-input_file = input('Enter trace (input) file name: ')
-iostat_file = input('Enter iostat file name (if not desired, type "no"): ')
+input_file = input('Enter trace (input) file path: ')
+iostat_file = input('Enter iostat file path (if not desired, type "no"): ')
 start_time = time.time()
 
 print('Retrieving data ...')
@@ -157,15 +157,15 @@ def cpu_utilization():
     props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
 
     textstr = '\n'.join((
-        'Avg. cpu Util.: %1.1f' %avg_cpu_util + '%',
-        'MAX cpu Util.: %1.1f' %max_cpu_util + '%',
-        'MIN cpu Util.: %1.1f' %min_cpu_util + '%'
+        'Avg. CPU Util.: %1.1f' %avg_cpu_util + '%',
+        'MAX CPU Util.: %1.1f' %max_cpu_util + '%',
+        'MIN CPU Util.: %1.1f' %min_cpu_util + '%'
     ))
 
     ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,
             verticalalignment='top', bbox=props)
 
-    plt.plot(x, y)
+    plt.plot(x, y, 'orange')
     plt.tight_layout()
     plt.gcf().set_size_inches(12, 6)
     plt.savefig('../results/diagram_results/cpu_util.png', dpi=60) 

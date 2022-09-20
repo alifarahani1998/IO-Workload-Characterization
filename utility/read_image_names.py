@@ -1,5 +1,5 @@
 import os
-def fn():       # 1.Get file names from directory
+def fn():       # 1.Get file paths from directory
     file_list=os.listdir(r"/path/to/image/directory")
     f= open("test.txt", 'w')
     #print (type(file_list))

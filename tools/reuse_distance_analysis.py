@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 
 
-input_file = input('Enter trace (input) file name: ')
+input_file = input('Enter reuse (input) file path: ')
 now = datetime.now()
 start_time = time.time()
 
