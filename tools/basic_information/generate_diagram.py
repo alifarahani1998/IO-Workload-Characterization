@@ -8,176 +8,12 @@ from pygooglechart import PieChart3D
 
 
 input_file = input('Enter trace (input) file path: ')
-iostat_file = input('Enter iostat file path (if not desired, type "no"): ')
 start_time = time.time()
 
 print('Retrieving data ...')
 
 
-read_list = []
-write_list = []
-disk_util = []
-cpu_util = []
-
-if iostat_file != 'no':
-    file = open('%s' %iostat_file, 'r')
-    lines = file.readlines()
-    for i, line in enumerate(lines):
-        if 'rMB/s' in line:
-            read_list.append(float((lines[i+1].split())[2]))
-        if 'wMB/s' in line:
-            write_list.append(float((lines[i+1].split())[8]))
-        if 'util' in line:
-            disk_util.append(float((lines[i+1].split())[20]))
-        if 'user' in line:
-            cpu_util.append(float((lines[i+1].split())[0]))
-
-
 df = pd.read_table('%s' %input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
-
-
-# io bandwidth diagram
-
-def draw_io_bandwidth():
-    print('Generating I/O bandwidth diagram ...')
-
-    avg_read = round(sum(read_list) / len(read_list), 2)
-    avg_write = round(sum(write_list) / len(write_list), 2)
-
-    read_max = max(read_list)
-    write_max = max(write_list)
-
-    idx = []
-
-    for i in range(len(read_list)):
-        if i % 1 == 0:
-            idx.append(i)
-
-    new_read_list = []
-    new_write_list = []
-
-    for i, item in enumerate(read_list):
-        if i in idx:
-            new_read_list.append(item)
-
-    for i, item in enumerate(write_list):
-        if i in idx:
-            new_write_list.append(item)
-
-
-    plt.rcParams.update({'font.size': 14.0, 'font.weight': 'bold'})
-
-    fig, ax = plt.subplots()
-    ax.set_xlabel('Time (min)', fontweight='bold', fontsize=20.0)
-    ax.set_ylabel('Bandwidth (MB/s)', fontweight='bold', fontsize=20.0)
-    ax.set_title('Distribution of I/O Bandwidth', fontweight='bold', fontsize=20.0)
-
-    x = np.arange(len(new_read_list))
-    y = new_write_list
-    z = new_read_list
-    ax.set_ylim([0, max(read_max, write_max) + 20])
-    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-
-    textstr = '\n'.join((
-        'Avg. Read: %1.1f MB/s' %avg_read,
-        'Avg. Write: %1.1f MB/s' %avg_write
-    ))
-
-    ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,
-            verticalalignment='top', bbox=props)
-
-    plt.plot(x, z, linestyle="-", marker="o", label="Read")
-    plt.plot(x, y, linestyle="-", marker="o", label="Write")
-    plt.legend(loc="upper right")
-    plt.tight_layout()
-    plt.gcf().set_size_inches(12, 6)
-    plt.savefig('../results/diagram_results/io_bandwidth.png', dpi=60) 
-    plt.close()
-
-
-
-# disk utilization diagram
-
-def disk_utilization():
-    print('Generating disk utilization diagram ...')
-
-    avg_disk_util = round(sum(disk_util) / len(disk_util), 2)
-
-    max_disk_util = max(disk_util)
-    min_disk_util = min(disk_util)
-
-    plt.rcParams.update({'font.size': 14.0, 'font.weight': 'bold'})
-
-    fig, ax = plt.subplots()
-    ax.set_xlabel('Time (min)', fontweight='bold', fontsize=20.0)
-    ax.set_ylabel('Utilization (%)', fontweight='bold', fontsize=20.0)
-    ax.set_title('Disk Utilization', fontweight='bold', fontsize=20.0)
-
-    x = np.arange(len(disk_util))
-    y = disk_util
-    ax.set_ylim([0, 100])
-    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-
-    textstr = '\n'.join((
-        'Avg. Disk Util.: %1.1f' %avg_disk_util + '%',
-        'MAX Disk Util.: %1.1f' %max_disk_util + '%',
-        'MIN Disk Util.: %1.1f' %min_disk_util + '%'
-    ))
-
-    ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,
-            verticalalignment='top', bbox=props)
-
-    plt.plot(x, y)
-    plt.tight_layout()
-    plt.gcf().set_size_inches(12, 6)
-    plt.savefig('../results/diagram_results/disk_util.png', dpi=60) 
-    plt.close()
-
-
-# cpu utilization diagram
-
-def cpu_utilization():
-    print('Generating CPU utilization diagram ...')
-
-    avg_cpu_util = round(sum(cpu_util) / len(cpu_util), 2)
-
-    max_cpu_util = max(cpu_util)
-    min_cpu_util = min(cpu_util)
-
-    plt.rcParams.update({'font.size': 14.0, 'font.weight': 'bold'})
-
-    fig, ax = plt.subplots()
-    ax.set_xlabel('Time (min)', fontweight='bold', fontsize=20.0)
-    ax.set_ylabel('Utilization (%)', fontweight='bold', fontsize=20.0)
-    ax.set_title('CPU Utilization', fontweight='bold', fontsize=20.0)
-
-    x = np.arange(len(cpu_util))
-    y = cpu_util
-    ax.set_ylim([0, 100])
-    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-
-    textstr = '\n'.join((
-        'Avg. CPU Util.: %1.1f' %avg_cpu_util + '%',
-        'MAX CPU Util.: %1.1f' %max_cpu_util + '%',
-        'MIN CPU Util.: %1.1f' %min_cpu_util + '%'
-    ))
-
-    ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,
-            verticalalignment='top', bbox=props)
-
-    plt.plot(x, y, 'orange')
-    plt.tight_layout()
-    plt.gcf().set_size_inches(12, 6)
-    plt.savefig('../results/diagram_results/cpu_util.png', dpi=60) 
-    plt.close()
-
-
-
-if iostat_file != 'no':
-    draw_io_bandwidth()
-    disk_utilization()
-    cpu_utilization()
-
 
 
 total_requests = 0
@@ -308,7 +144,7 @@ ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, textprops={'font
 ax1.axis('equal')
 plt.tight_layout()
 plt.gcf().set_size_inches(12, 6)
-plt.savefig('../results/diagram_results/2d_pie.png', dpi=60) 
+plt.savefig('../../results/diagram_results/2d_pie.png', dpi=60) 
 plt.close()
 
 print('Generating 3D pie diagram ...')
@@ -324,7 +160,7 @@ chart.title = 'Read/Write Percentage'
 
 chart.set_pie_labels(['Read: {:.1%}'.format(read_count / total_requests), 'Write: {:.1%}'.format(write_count / total_requests)])
 chart.set_title_style(font_size=20)
-chart.download('../results/diagram_results/3d_pie.png')
+chart.download('../../results/diagram_results/3d_pie.png')
 
 
 for key in sector_range:
@@ -353,7 +189,7 @@ plt.ylabel('Frequency (%)', fontweight='bold', fontsize=20.0)
 plt.title('Distribution of I/O Sizes', fontweight='bold', fontsize=20.0)
 
 plt.tight_layout()
-plt.savefig('../results/diagram_results/mixed_rw_bar.png', dpi=60) 
+plt.savefig('../../results/diagram_results/mixed_rw_bar.png', dpi=60) 
 plt.close()
 
 
@@ -393,7 +229,7 @@ ax.bar_label(rects2, padding=3, fmt=' %g', color='orange')
 fig.tight_layout()
 
 plt.gcf().set_size_inches(12, 6)
-plt.savefig('../results/diagram_results/separated_rw_bar.png', dpi=60) 
+plt.savefig('../../results/diagram_results/separated_rw_bar.png', dpi=60) 
 plt.close()
 
 
@@ -473,7 +309,7 @@ def cdf_freq_range(fn, s, e, i):
     plt.title('Cumulative Distribution Function (CDF)', fontweight='bold', fontsize=20.0)
     plt.tight_layout()
     plt.gcf().set_size_inches(12, 6)
-    plt.savefig('../results/diagram_results/cdf_%d.png' %fn, dpi=60) 
+    plt.savefig('../../results/diagram_results/cdf_%d.png' %fn, dpi=60) 
     plt.close()
 
     for key in dup_range:
@@ -484,29 +320,6 @@ def cdf_freq_range(fn, s, e, i):
 print('Generating cdf diagrams ...')
 
 cdf_freq_range(1, 1, 300, 49)
-
-
-# print('Generating access_freq diagram ...')
-
-# access frequency (TWSD) diagram
-
-# plt.rcParams.update({'font.size': 15.0, 'font.weight': 'bold'})
-
-# plt.bar(list(dic_duplicated.keys()), list(dic_duplicated.values()), color ='black', width = 0.2)
-
-# plt.ylim([0, max(dic_duplicated.values())])
-
-# plt.xlabel('Address Range (sector offset)', fontweight='bold', fontsize=20.0)
-
-# plt.ylabel('Number of I/O Requests', fontweight='bold', fontsize=20.0)
-
-
-# plt.title('Access Frequency of I/Os', fontweight='bold', fontsize=20.0)
-# plt.tight_layout()
-# plt.xticks([])
-# plt.gcf().set_size_inches(12, 6)
-# plt.savefig('../results/diagram_results/access_freq.png', dpi=60) 
-# plt.close()
 
 
 print('Total execution time: %0.1f seconds: ' %round(time.time() - start_time, 2))

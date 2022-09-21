@@ -33,7 +33,7 @@ for line in lines:
             new_lines.append(new_line[:-1])
 
 
-with open('../data/preprocess_trace.txt', 'w') as f:
+with open('../../data/preprocess_trace.txt', 'w') as f:
     for item in new_lines:
         f.write(item + '\n')
 

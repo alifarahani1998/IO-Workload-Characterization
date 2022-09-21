@@ -28,7 +28,10 @@ def copy_files():
         source = source_folder + file_name
         destination = destination_folder + file_name
 
-        shutil.copyfile(source, destination)
+        try:
+            shutil.copyfile(source, destination)
+        except IOError as err:
+            print(err)
         
     print('copying done!')
 
