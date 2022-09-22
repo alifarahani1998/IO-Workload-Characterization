@@ -4,7 +4,7 @@ import numpy as np
 
 # io bandwidth diagram
 
-def draw_io_bandwidth(iostat_file):
+def draw_io_bandwidth(iostat_file, min_hour, interval):
     print('Generating I/O bandwidth diagram ...')
 
 
@@ -29,9 +29,14 @@ def draw_io_bandwidth(iostat_file):
 
     idx = []
 
-    for i in range(len(read_list)):
-        if i % 1 == 0:
-            idx.append(i)
+    if min_hour == 'h':
+        for i in range(len(read_list)):
+            if i % (interval*60) == 0:
+                idx.append(i)
+    else:
+        for i in range(len(read_list)):
+            if i % interval == 0:
+                idx.append(i)
 
     new_read_list = []
     new_write_list = []
@@ -48,11 +53,14 @@ def draw_io_bandwidth(iostat_file):
     plt.rcParams.update({'font.size': 14.0, 'font.weight': 'bold'})
 
     fig, ax = plt.subplots()
-    ax.set_xlabel('Time (min)', fontweight='bold', fontsize=20.0)
+    ax.set_xlabel('Time (%s)' %min_hour, fontweight='bold', fontsize=20.0)
     ax.set_ylabel('Bandwidth (MB/s)', fontweight='bold', fontsize=20.0)
     ax.set_title('Distribution of I/O Bandwidth', fontweight='bold', fontsize=20.0)
 
-    x = np.arange(len(new_read_list))
+    x = []
+    for i in range(len(new_read_list)):
+        x.append(i*interval)
+
     y = new_write_list
     z = new_read_list
     ax.set_ylim([0, max(read_max, write_max) + 20])
@@ -66,6 +74,8 @@ def draw_io_bandwidth(iostat_file):
     ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,
             verticalalignment='top', bbox=props)
 
+    plt.xticks(rotation=45)
+    plt.xticks(np.arange(0, max(x)+1, interval))
     plt.plot(x, z, linestyle="-", marker="o", label="Read")
     plt.plot(x, y, linestyle="-", marker="o", label="Write")
     plt.legend(loc="upper right")
@@ -78,7 +88,7 @@ def draw_io_bandwidth(iostat_file):
 
 # disk utilization diagram
 
-def disk_utilization(iostat_file):
+def disk_utilization(iostat_file, min_hour, interval):
     print('Generating disk utilization diagram ...')
 
     disk_util = []
@@ -95,15 +105,36 @@ def disk_utilization(iostat_file):
     max_disk_util = max(disk_util)
     min_disk_util = min(disk_util)
 
+    idx = []
+
+    if min_hour == 'h':
+        for i in range(len(disk_util)):
+            if i % (interval*60) == 0:
+                idx.append(i)
+    else:
+        for i in range(len(disk_util)):
+            if i % interval == 0:
+                idx.append(i)
+
+    new_disk_util = []
+
+    for i, item in enumerate(disk_util):
+        if i in idx:
+            new_disk_util.append(item)
+
+
     plt.rcParams.update({'font.size': 14.0, 'font.weight': 'bold'})
 
     fig, ax = plt.subplots()
-    ax.set_xlabel('Time (min)', fontweight='bold', fontsize=20.0)
+    ax.set_xlabel('Time (%s)' %min_hour, fontweight='bold', fontsize=20.0)
     ax.set_ylabel('Utilization (%)', fontweight='bold', fontsize=20.0)
     ax.set_title('Disk Utilization', fontweight='bold', fontsize=20.0)
 
-    x = np.arange(len(disk_util))
-    y = disk_util
+    x = []
+    for i in range(len(new_disk_util)):
+        x.append(i*interval)
+
+    y = new_disk_util
     ax.set_ylim([0, 100])
     props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
 
@@ -116,6 +147,8 @@ def disk_utilization(iostat_file):
     ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,
             verticalalignment='top', bbox=props)
 
+    plt.xticks(rotation=45)
+    plt.xticks(np.arange(0, max(x)+1, interval))
     plt.plot(x, y)
     plt.tight_layout()
     plt.gcf().set_size_inches(12, 6)
