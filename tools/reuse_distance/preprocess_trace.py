@@ -1,4 +1,5 @@
 import time
+import os
 
 input_file = input('Enter trace (input) file path: ')
 start_time = time.time()
@@ -33,6 +34,9 @@ for line in lines:
             new_lines.append(new_line[:-1])
 
 
+if not os.path.exists('../../data'):
+    os.mkdir('../../data')
+    
 with open('../../data/preprocess_trace.txt', 'w') as f:
     for item in new_lines:
         f.write(item + '\n')

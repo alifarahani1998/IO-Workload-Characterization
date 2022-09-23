@@ -3,12 +3,26 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 import re
+import os
 # from collections import deque
 from pygooglechart import PieChart3D
 
 
 input_file = input('Enter trace (input) file path: ')
 start_time = time.time()
+
+file = open('%s' %input_file, 'r')
+lines = file.readlines()
+for line in lines:
+    if 'maj/min' not in line:
+        with open('%s '%input_file, 'r+') as f: s = f.read(); f.seek(0); f.write('  maj/min cpu #seq time pid event R/W start_sector + #sectors pname\n' + s)
+        break
+
+if not os.path.exists('../../results'):
+    os.mkdir('../../results')
+    os.mkdir('../../results/diagram_results')
+elif not os.path.exists('../../results/diagram_results'):
+    os.mkdir('../../results/diagram_results')
 
 print('Retrieving data ...')
 
@@ -133,7 +147,7 @@ starting_sectors = [int(i) for i in starting_sectors]
 
 print('Generating 2D pie diagram ...')
 
-# Pie chart
+# 2d Pie chart
 labels = ['Read', 'Write']
 sizes = [read_count, write_count]
 
@@ -160,7 +174,10 @@ chart.title = 'Read/Write Percentage'
 
 chart.set_pie_labels(['Read: {:.1%}'.format(read_count / total_requests), 'Write: {:.1%}'.format(write_count / total_requests)])
 chart.set_title_style(font_size=20)
-chart.download('../../results/diagram_results/3d_pie.png')
+try:
+    chart.download('../../results/diagram_results/3d_pie.png')
+except:
+    print('Could not download 3d pie diagram, please check your network and try again!')
 
 
 for key in sector_range:
@@ -195,10 +212,10 @@ plt.close()
 
 
 for key in read_range:
-    read_range[key] = round(read_range[key] / total_requests * 100, 1)
+    read_range[key] = round(read_range[key] / read_count * 100, 1)
 
 for key in write_range:
-    write_range[key] = round(write_range[key] / total_requests * 100, 1)
+    write_range[key] = round(write_range[key] / write_count * 100, 1)
 
 print('Generating separated_rw_bar diagram ...')
 

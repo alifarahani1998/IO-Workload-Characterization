@@ -2,6 +2,7 @@ import pandas as pd
 import time
 from datetime import datetime
 import re
+import os
 import csv
 # from collections import deque
 
@@ -10,6 +11,19 @@ input_file = input('Enter trace (input) file path: ')
 app_name = input('Enter the name of traced application: ')
 now = datetime.now()
 start_time = time.time()
+
+file = open('%s' %input_file, 'r')
+lines = file.readlines()
+for line in lines:
+    if 'maj/min' not in line:
+        with open('%s '%input_file, 'r+') as f: s = f.read(); f.seek(0); f.write('  maj/min cpu #seq time pid event R/W start_sector + #sectors pname\n' + s)
+        break
+
+if not os.path.exists('../../results'):
+    os.mkdir('../../results')
+    os.mkdir('../../results/text_results')
+elif not os.path.exists('../../results/text_results'):
+    os.mkdir('../../results/text_results')
 
 print('Retrieving data ...')
 
@@ -188,10 +202,10 @@ with open('../../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y
 
 
 for key in read_range:
-    read_range[key] = round(read_range[key] / total_requests * 100, 1)
+    read_range[key] = round(read_range[key] / read_count * 100, 1)
 
 for key in write_range:
-    write_range[key] = round(write_range[key] / total_requests * 100, 1)
+    write_range[key] = round(write_range[key] / write_count * 100, 1)
 
 
 
