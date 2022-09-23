@@ -13,11 +13,10 @@ now = datetime.now()
 start_time = time.time()
 
 file = open('%s' %input_file, 'r')
-lines = file.readlines()
-for line in lines:
-    if 'maj/min' not in line:
-        with open('%s '%input_file, 'r+') as f: s = f.read(); f.seek(0); f.write('  maj/min cpu #seq time pid event R/W start_sector + #sectors pname\n' + s)
-        break
+line = file.readline()
+
+if 'maj/min' not in line:
+    with open('%s '%input_file, 'r+') as f: s = f.read(); f.seek(0); f.write('  maj/min cpu #seq time pid event R/W start_sector + #sectors pname\n' + s)
 
 if not os.path.exists('../../results'):
     os.mkdir('../../results')

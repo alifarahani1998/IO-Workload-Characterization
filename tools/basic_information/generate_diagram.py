@@ -4,7 +4,6 @@ import numpy as np
 import time
 import re
 import os
-# from collections import deque
 from pygooglechart import PieChart3D
 
 
@@ -12,11 +11,11 @@ input_file = input('Enter trace (input) file path: ')
 start_time = time.time()
 
 file = open('%s' %input_file, 'r')
-lines = file.readlines()
-for line in lines:
-    if 'maj/min' not in line:
-        with open('%s '%input_file, 'r+') as f: s = f.read(); f.seek(0); f.write('  maj/min cpu #seq time pid event R/W start_sector + #sectors pname\n' + s)
-        break
+line = file.readline()
+
+if 'maj/min' not in line:
+    with open('%s '%input_file, 'r+') as f: s = f.read(); f.seek(0); f.write('  maj/min cpu #seq time pid event R/W start_sector + #sectors pname\n' + s)
+      
 
 if not os.path.exists('../../results'):
     os.mkdir('../../results')
@@ -157,6 +156,7 @@ ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, textprops={'font
 # Equal aspect ratio ensures that pie is drawn as a circle
 ax1.axis('equal')
 plt.tight_layout()
+plt.title('Read/Write Percentage', fontweight='bold', fontsize=20.0)
 plt.gcf().set_size_inches(12, 6)
 plt.savefig('../../results/diagram_results/2d_pie.png', dpi=60) 
 plt.close()
