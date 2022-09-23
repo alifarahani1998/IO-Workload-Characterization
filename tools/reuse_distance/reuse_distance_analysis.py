@@ -126,4 +126,3 @@ ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,
 plt.tight_layout()
 plt.gcf().set_size_inches(12, 6)
 plt.show()
-
