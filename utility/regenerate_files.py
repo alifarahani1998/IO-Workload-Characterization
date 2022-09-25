@@ -1,51 +1,35 @@
 import os
-import shutil
 import string
+import shutil
+
+path="F:/test/File"
+os.chdir(path)
 
 
-path = 'F:/test/lfw_funneled_new1/'
-
-source_folder = 'F:/test/lfw_funneled_new1/'
-destination_folder = 'F:/test/lfw_funneled_new2/'
-
-
-def rename_files(i, j):
-
-    directory_list = os.listdir(path)
-
-    for k, filename in enumerate(directory_list):
-        
-        dst_file = '%s%s%d' %(i, j, k) + '.jpg'
-
-        os.rename(os.path.join(path, filename), os.path.join(path, dst_file))
-
-    print('renaming done!')
-
-
-def copy_files():
-    for file_name in os.listdir(source_folder):
-        
-        source = source_folder + file_name
-        destination = destination_folder + file_name
-
+def copy():
+    os.chdir(path)
+    dst_dir = 'F:/test/New_File'
+    for f in os.listdir(path):
         try:
-            shutil.copyfile(source, destination)
-        except IOError as err:
+            shutil.copy(f, dst_dir)
+        except OSError as err:
             print(err)
-        
-    print('copying done!')
+    print('copy done!')
 
 
-for i in range(0, 44):
-    for j in range(0, 44):
-        rename_files(i, j)
-        copy_files()
 
+alphabet = list(string.ascii_lowercase)
+new_alphabet = ['a', 'b', 'c', 'd']
 
-# alphabet = list(string.ascii_lowercase)
+for letter1 in alphabet:
+    for letter2 in alphabet:
+        for letter3 in new_alphabet:
+            i = 0
+            for file in os.listdir(path):
 
-# for i in alphabet:
-#     for j in alphabet:
-#         rename_files(i, j)
-#         copy_files()
+                new_file_name = "%s%s%s%d.jpg" %(letter1, letter2, letter3, i)
+                os.rename(file, new_file_name)
 
+                i += 1
+            print('rename done!')
+            copy()
