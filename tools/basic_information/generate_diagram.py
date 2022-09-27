@@ -4,6 +4,7 @@ import numpy as np
 import time
 import re
 import os
+from scipy.interpolate import make_interp_spline, BSpline
 from pygooglechart import PieChart3D
 
 
@@ -14,7 +15,7 @@ file = open('%s' %input_file, 'r')
 line = file.readline()
 
 if 'maj/min' not in line:
-    with open('%s '%input_file, 'r+') as f: s = f.read(); f.seek(0); f.write('  maj/min cpu #seq time pid event R/W start_sector + #sectors pname\n' + s)
+    with open('%s' %input_file, 'r+') as f: s = f.read(); f.seek(0); f.write('  maj/min cpu #seq time pid event R/W start_sector + #sectors pname\n' + s)
       
 
 if not os.path.exists('../../results'):
@@ -113,11 +114,21 @@ def compare_size(value):
     elif value > 128:
         return '>128'
 
+read_starting_sectors = []
+write_starting_sectors = []
+
+for index in df.index:
+
+    if 'R' in df['R/W'][index]:
+        read_starting_sectors.append(df['start_sector'][index])
+    elif 'W' in df['R/W'][index]:
+        write_starting_sectors.append(df['start_sector'][index])
+
 
 # size of individual IOs
 
 for index in df.index:
-        
+
     if df['#sectors'][index] != '' and not re.match('^.*[a-zA-Z]+.*', df['#sectors'][index]):
 
         temp = sectors_to_kb(int(df['#sectors'][index]))
@@ -144,6 +155,25 @@ for item in list(starting_sectors):
 
 starting_sectors = [int(i) for i in starting_sectors]
 
+#######################################################
+for item in list(read_starting_sectors):
+    if item == '0' or item == '' or re.match('^.*[a-zA-Z]+.*', item) or '[' in item:
+        read_starting_sectors.remove(item)
+
+read_starting_sectors = [int(i) for i in read_starting_sectors]
+
+#######################################################
+for item in list(write_starting_sectors):
+    if item == '0' or item == '' or re.match('^.*[a-zA-Z]+.*', item) or '[' in item:
+        write_starting_sectors.remove(item)
+
+write_starting_sectors = [int(i) for i in write_starting_sectors]
+
+starting_sectors.sort()
+read_starting_sectors.sort()
+write_starting_sectors.sort()
+
+
 print('Generating 2D pie diagram ...')
 
 # 2d Pie chart
@@ -156,7 +186,6 @@ ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, textprops={'font
 # Equal aspect ratio ensures that pie is drawn as a circle
 ax1.axis('equal')
 plt.tight_layout()
-plt.title('Read/Write Percentage', fontweight='bold', fontsize=20.0)
 plt.gcf().set_size_inches(12, 6)
 plt.savefig('../../results/diagram_results/2d_pie.png', dpi=60) 
 plt.close()
@@ -253,29 +282,54 @@ plt.close()
 
 # access frequency of IOs
 
-starting_sectors = sorted(starting_sectors)
-dic_duplicated = {}
+total_dic_duplicated = {}
 
 for item in starting_sectors:
-    if not item in dic_duplicated:
-        dic_duplicated[item] = 1
+    if not item in total_dic_duplicated:
+        total_dic_duplicated[item] = 1
     else:
-        dic_duplicated[item] += 1
+        total_dic_duplicated[item] += 1
 
 
-for key in dict(dic_duplicated):
-    if not dic_duplicated[key] > 1:
-        del dic_duplicated[key]
+total_dic_duplicated = {str(key): value for key, value in total_dic_duplicated.items()}
+
+total_cdf_dic = {}
+
+########################################
+read_dic_duplicated = {}
+
+for item in read_starting_sectors:
+    if not item in read_dic_duplicated:
+        read_dic_duplicated[item] = 1
+    else:
+        read_dic_duplicated[item] += 1
 
 
-dic_duplicated = {str(key): value for key, value in dic_duplicated.items()}
+read_dic_duplicated = {str(key): value for key, value in read_dic_duplicated.items()}
+
+read_cdf_dic = {}
+
+#########################################
+
+write_dic_duplicated = {}
+
+for item in write_starting_sectors:
+    if not item in write_dic_duplicated:
+        write_dic_duplicated[item] = 1
+    else:
+        write_dic_duplicated[item] += 1
+
+
+write_dic_duplicated = {str(key): value for key, value in write_dic_duplicated.items()}
+
+write_cdf_dic = {}
 
 
 
-# CDF diagram
+# access frequency diagram
 
 
-def cdf_freq_range(fn, s, e, i):
+def access_freq_range(dic_duplicated, type, fn, s, i):
 
 
     dup_range = {
@@ -284,8 +338,8 @@ def cdf_freq_range(fn, s, e, i):
     '%d-%d' %((s+2*i+2), (s+3*i+2)): 0,
     '%d-%d' %((s+3*i+3), (s+4*i+3)): 0,
     '%d-%d' %((s+4*i+4), (s+5*i+4)): 0,
-    '%d-%d' %((s+5*i+5), e): 0,
-    '>%d' %e: 0
+    '%d-%d' %((s+5*i+5), (s+6*i+5)): 0,
+    '>%d' %(s+6*i+5): 0
     }
 
 
@@ -300,10 +354,10 @@ def cdf_freq_range(fn, s, e, i):
             dup_range['%d-%d' %((s+3*i+3), (s+4*i+3))] += 1
         elif dic_duplicated[key] >= (s+4*i+4) and dic_duplicated[key] <= (s+5*i+4):
             dup_range['%d-%d' %((s+4*i+4), (s+5*i+4))] += 1
-        elif dic_duplicated[key] >= (s+5*i+5) and dic_duplicated[key] <= e:
-            dup_range['%d-%d' %((s+5*i+5), e)] += 1
-        elif dic_duplicated[key] > e:
-            dup_range['>%d' %e] += 1
+        elif dic_duplicated[key] >= (s+5*i+5) and dic_duplicated[key] <= (s+6*i+5):
+            dup_range['%d-%d' %((s+5*i+5), (s+6*i+5))] += 1
+        elif dic_duplicated[key] > (s+6*i+5):
+            dup_range['>%d' %(s+6*i+5)] += 1
 
     for key in dup_range:
         dup_range[key] = round(dup_range[key] / len(dic_duplicated) * 100, 1)
@@ -323,20 +377,90 @@ def cdf_freq_range(fn, s, e, i):
 
     plt.ylabel('Distribution of Range (%)', fontweight='bold', fontsize=20.0)
 
-    plt.title('Cumulative Distribution Function (CDF)', fontweight='bold', fontsize=20.0)
+    if type == 'total':
+        plt.title('Access Frequency Distribution (Total R/W)', fontweight='bold', fontsize=20.0)
+    elif type == 'read':
+        plt.title('Access Frequency Distribution (Read)', fontweight='bold', fontsize=20.0)
+    else:
+        plt.title('Access Frequency Distribution (Write)', fontweight='bold', fontsize=20.0)
     plt.tight_layout()
     plt.gcf().set_size_inches(12, 6)
-    plt.savefig('../../results/diagram_results/cdf_%d.png' %fn, dpi=60) 
+    plt.savefig('../../results/diagram_results/access_freq_%s_%d.png' %(type, fn), dpi=60) 
     plt.close()
 
     for key in dup_range:
-        if dup_range[key] >= 50:
+        if dup_range[key] > 0 and '-' in key:
+            if type == 'total':
+                total_cdf_dic[int(key.split('-')[1])] = dup_range[key]
+            elif type == 'read':
+                read_cdf_dic[int(key.split('-')[1])] = dup_range[key]
+            else:
+                write_cdf_dic[int(key.split('-')[1])] = dup_range[key]
+        elif dup_range[key] > 0 and '>' in key:
+            if type == 'total':
+                total_cdf_dic[int(key.split('>')[1])] = dup_range[key]
+            elif type == 'read':
+                read_cdf_dic[int(key.split('>')[1])] = dup_range[key]
+            else:
+                write_cdf_dic[int(key.split('>')[1])] = dup_range[key]
+
+    for key in dup_range:
+        if dup_range[key] >= 50 and int(key.split('-')[1]) > 9:
             splitted = key.split('-')
-            cdf_freq_range(fn + 1, int(splitted[0]), int(splitted[1]), (int(splitted[1])/5)-1)
+            access_freq_range(dic_duplicated, type, fn + 1, int(splitted[0]), (int(splitted[1])/5)-1)
 
-print('Generating cdf diagrams ...')
+print('Generating access frequency diagrams ...')
 
-cdf_freq_range(1, 1, 300, 49)
+access_freq_range(total_dic_duplicated, 'total', 1, 1, 49)
+access_freq_range(read_dic_duplicated, 'read', 1, 1, 49)
+access_freq_range(write_dic_duplicated, 'write', 1, 1, 49)
 
+
+# CDF diagrams
+
+print('Generating CDF diagram ...')
+
+def cdf_diagram():
+
+    plt.rcParams.update({'font.size': 14.0, 'font.weight': 'bold'})
+
+    fig, ax = plt.subplots()
+    ax.set_xlabel('Access Frequency', fontweight='bold', fontsize=20.0)
+    ax.set_ylabel('CDF (%)', fontweight='bold', fontsize=20.0)
+    # ax.set_title('Cumulative Distribution Function', fontweight='bold', fontsize=20.0)
+
+    
+    x1 = (sorted(total_cdf_dic.keys()))
+    x2 = (sorted(read_cdf_dic.keys()))
+    x3 = (sorted(write_cdf_dic.keys()))
+
+  
+    y1 = (sorted(total_cdf_dic.values()))
+    y2 = (sorted(read_cdf_dic.values()))
+    y3 = (sorted(write_cdf_dic.values()))
+
+    xnew1 = np.linspace(min(x1), max(x1), 100) 
+    xnew2 = np.linspace(min(x2), max(x2), 100) 
+    xnew3 = np.linspace(min(x3), max(x3), 100) 
+
+    spl1 = make_interp_spline(x1, y1, k=1) 
+    spl2 = make_interp_spline(x2, y2, k=1) 
+    spl3 = make_interp_spline(x3, y3, k=1)  
+
+    ynew1 = spl1(xnew1)
+    ynew2 = spl2(xnew2)
+    ynew3 = spl3(xnew3)
+
+    plt.grid()
+    ax.set_ylim([0, 101])
+    plt.plot(xnew1, ynew1, '-', color='green', linewidth=3.0, label='total R/W')
+    plt.plot(xnew2, ynew2, '--', color='blue', linewidth=3.0, label='Read')
+    plt.plot(xnew3, ynew3, '-.', color='orange', linewidth=3.0, label='Write')
+    plt.legend(loc='lower right')
+    plt.gcf().set_size_inches(8, 6)
+    plt.savefig('../../results/diagram_results/cdf.png', dpi=60) 
+    plt.close()
+
+cdf_diagram()
 
 print('Total execution time: %0.1f seconds: ' %round(time.time() - start_time, 2))

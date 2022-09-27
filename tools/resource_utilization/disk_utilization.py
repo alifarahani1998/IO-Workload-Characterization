@@ -3,13 +3,6 @@ import numpy as np
 import os
 
 
-if not os.path.exists('../../results'):
-    os.mkdir('../../results')
-    os.mkdir('../../results/diagram_results')
-elif not os.path.exists('../../results/diagram_results'):
-    os.mkdir('../../results/diagram_results')
-
-
 # io bandwidth diagram
 
 def draw_io_bandwidth(iostat_file, min_hour, interval):
@@ -63,7 +56,7 @@ def draw_io_bandwidth(iostat_file, min_hour, interval):
     fig, ax = plt.subplots()
     ax.set_xlabel('Time (%s)' %min_hour, fontweight='bold', fontsize=20.0)
     ax.set_ylabel('Bandwidth (MB/s)', fontweight='bold', fontsize=20.0)
-    ax.set_title('Distribution of I/O Bandwidth', fontweight='bold', fontsize=20.0)
+    ax.set_title('I/O Bandwidth', fontweight='bold', fontsize=20.0)
 
     x = []
     for i in range(len(new_read_list)):
@@ -71,7 +64,7 @@ def draw_io_bandwidth(iostat_file, min_hour, interval):
 
     y = new_write_list
     z = new_read_list
-    ax.set_ylim([0, max(read_max, write_max) + 20])
+    ax.set_ylim([0, max(max(new_read_list), max(new_write_list)) + 5])
     props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
 
     textstr = '\n'.join((
@@ -86,7 +79,7 @@ def draw_io_bandwidth(iostat_file, min_hour, interval):
     plt.xticks(np.arange(0, max(x)+1, interval))
     plt.plot(x, z, linestyle="-", marker="o", label="Read")
     plt.plot(x, y, linestyle="-", marker="o", label="Write")
-    plt.legend(loc="upper right")
+    plt.legend(loc="best")
     plt.tight_layout()
     plt.gcf().set_size_inches(12, 6)
     plt.savefig('../../results/diagram_results/io_bandwidth.png', dpi=60) 

@@ -1,4 +1,5 @@
 import time
+import os
 import disk_utilization as disk
 import cpu_utilization as cpu
 # import gpu_utilization as gpu
@@ -17,6 +18,12 @@ else:
     exit()
 
 start_time = time.time()
+
+if not os.path.exists('../../results'):
+    os.mkdir('../../results')
+    os.mkdir('../../results/diagram_results')
+elif not os.path.exists('../../results/diagram_results'):
+    os.mkdir('../../results/diagram_results')
 
 print('Retrieving data ...')
 

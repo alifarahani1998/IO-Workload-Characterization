@@ -3,13 +3,6 @@ import numpy as np
 import os
 
 
-if not os.path.exists('../../results'):
-    os.mkdir('../../results')
-    os.mkdir('../../results/diagram_results')
-elif not os.path.exists('../../results/diagram_results'):
-    os.mkdir('../../results/diagram_results')
-
-
 # cpu utilization diagram
 
 def cpu_utilization(iostat_file, min_hour, interval):
