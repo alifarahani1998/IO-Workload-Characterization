@@ -25,9 +25,6 @@ def draw_io_bandwidth(iostat_file, min_hour, interval):
     avg_read = round(sum(read_list) / len(read_list), 2)
     avg_write = round(sum(write_list) / len(write_list), 2)
 
-    read_max = max(read_list)
-    write_max = max(write_list)
-
     idx = []
 
     if min_hour == 'h':

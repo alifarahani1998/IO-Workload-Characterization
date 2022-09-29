@@ -29,7 +29,6 @@ print('Retrieving data ...')
 df = pd.read_table('%s' %input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
 
 
-total_requests = 0
 read_sectors = 0
 write_sectors = 0
 read_count = 0
@@ -126,20 +125,18 @@ for index in df.index:
 
         temp = sectors_to_kb(int(df['#sectors'][index]))
 
-        total_requests += 1
-
-        if 'R' in df['R/W'][index]:
+        if 'R' in df['R/W'][index] and 'M' not in df['R/W'][index]:
             read_sectors += int(df['#sectors'][index])
             read_count += 1
             read_range[compare_size(temp)] += 1
-        elif 'W' in df['R/W'][index]:
+        elif 'W' in df['R/W'][index] and 'M' not in df['R/W'][index]:
             write_sectors += int(df['#sectors'][index])                        
             write_count += 1
             write_range[compare_size(temp)] += 1
         
         sector_range[compare_size(temp)] += 1
          
-
+total_requests = read_count + write_count
 
 starting_sectors = list(df['start_sector'])
 
@@ -158,7 +155,7 @@ with open('../../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y
     f.write('Number of Write requests: %d\n\n' %write_count)
     f.write('Read size: %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' %(read_sectors, sectors_to_kb(read_sectors), sectors_to_mb(read_sectors), sectors_to_gb(read_sectors), sectors_to_tb(read_sectors)))
     f.write('Write size: %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' %(write_sectors, sectors_to_kb(write_sectors), sectors_to_mb(write_sectors), sectors_to_gb(write_sectors), sectors_to_tb(write_sectors)))
-    f.write('Total size of requested sectors (Reed + Write): %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' %(read_sectors+write_sectors, sectors_to_kb(read_sectors+write_sectors), sectors_to_mb(read_sectors+write_sectors), sectors_to_gb(read_sectors+write_sectors), sectors_to_tb(read_sectors+write_sectors)))
+    f.write('Total requests size (Read + Write): %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' %(read_sectors+write_sectors, sectors_to_kb(read_sectors+write_sectors), sectors_to_mb(read_sectors+write_sectors), sectors_to_gb(read_sectors+write_sectors), sectors_to_tb(read_sectors+write_sectors)))
     f.write('Read percentage: {:.1%}\n\n'.format(read_count / total_requests))
     f.write('Write percentage: {:.1%}\n\n'.format(write_count / total_requests))
 
@@ -173,10 +170,8 @@ with open('../../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y
     else:
         f.write('Average Write size: 0 KB\n\n')
 
-    f.write('Maximum requested address (sector offset): %d GB\n\n' %sectors_to_gb(max(starting_sectors)))
-    f.write('Minimum requested address (sector offset): %d GB\n\n' %sectors_to_gb(min(starting_sectors)))
-
-
+    f.write('Maximum requested address (sector offset): (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' %(sectors_to_kb(max(starting_sectors)), sectors_to_mb(max(starting_sectors)), sectors_to_gb(max(starting_sectors)), sectors_to_tb(max(starting_sectors))))
+    f.write('Minimum requested address (sector offset): (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' %(sectors_to_kb(min(starting_sectors)), sectors_to_mb(min(starting_sectors)), sectors_to_gb(min(starting_sectors)), sectors_to_tb(min(starting_sectors))))
 
 
 for key in sector_range:
@@ -185,7 +180,7 @@ for key in sector_range:
 
 
 with open('../../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
-    f.write('\n***Distribution of I/O Sizes (total R/W)***\n')
+    f.write('\n***Distribution of I/O Sizes (Total R/W)***\n')
     f.write('\tI/O Size (KB)\t\tFrequency (%)\n\t-------------\t\t-------------\n')
     f.write('\t    [1-4]\t\t    %0.1f\n' %sector_range['1-4'])
     f.write('\t    [5-8]\t\t    %0.1f\n' %sector_range['5-8'])

@@ -30,7 +30,6 @@ print('Retrieving data ...')
 df = pd.read_table('%s' %input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
 
 
-total_requests = 0
 read_count = 0
 write_count = 0
 
@@ -119,9 +118,9 @@ write_starting_sectors = []
 
 for index in df.index:
 
-    if 'R' in df['R/W'][index]:
+    if 'R' in df['R/W'][index] and 'M' not in df['R/W'][index]:
         read_starting_sectors.append(df['start_sector'][index])
-    elif 'W' in df['R/W'][index]:
+    elif 'W' in df['R/W'][index] and 'M' not in df['R/W'][index]:
         write_starting_sectors.append(df['start_sector'][index])
 
 
@@ -133,21 +132,19 @@ for index in df.index:
 
         temp = sectors_to_kb(int(df['#sectors'][index]))
 
-        total_requests += 1
-
-        if 'R' in df['R/W'][index]:
+        if 'R' in df['R/W'][index] and 'M' not in df['R/W'][index]:
             read_count += 1
             read_range[compare_size(temp)] += 1
-        elif 'W' in df['R/W'][index]:
+        elif 'W' in df['R/W'][index] and 'M' not in df['R/W'][index]:
             write_count += 1
             write_range[compare_size(temp)] += 1
         
         sector_range[compare_size(temp)] += 1
          
+total_requests = read_count + write_count
 
 
 starting_sectors = list(df['start_sector'])
-
 
 for item in list(starting_sectors):
     if item == '0' or item == '' or re.match('^.*[a-zA-Z]+.*', item) or '[' in item:
@@ -215,7 +212,7 @@ for key in sector_range:
 
 print('Generating mixed_rw_bar diagram ...')
 
-# Mixed R/W IO sizes diagram
+# Total R/W IO sizes diagram
 
 plt.rcParams.update({'font.size': 15.0, 'font.weight': 'bold'})
 plt.rcParams['figure.figsize'] = [12, 6]
@@ -232,10 +229,10 @@ plt.xlabel('I/O Size (KB)', fontweight='bold', fontsize=20.0)
 
 plt.ylabel('Frequency (%)', fontweight='bold', fontsize=20.0)
 
-plt.title('Distribution of I/O Sizes', fontweight='bold', fontsize=20.0)
+plt.title('Distribution of I/O Sizes (Total R/W)', fontweight='bold', fontsize=20.0)
 
 plt.tight_layout()
-plt.savefig('../../results/diagram_results/mixed_rw_bar.png', dpi=60) 
+plt.savefig('../../results/diagram_results/total_rw_bar.png', dpi=60) 
 plt.close()
 
 
@@ -383,6 +380,7 @@ def access_freq_range(dic_duplicated, type, fn, s, i):
         plt.title('Access Frequency Distribution (Read)', fontweight='bold', fontsize=20.0)
     else:
         plt.title('Access Frequency Distribution (Write)', fontweight='bold', fontsize=20.0)
+        
     plt.tight_layout()
     plt.gcf().set_size_inches(12, 6)
     plt.savefig('../../results/diagram_results/access_freq_%s_%d.png' %(type, fn), dpi=60) 
@@ -405,7 +403,7 @@ def access_freq_range(dic_duplicated, type, fn, s, i):
                 write_cdf_dic[int(key.split('>')[1])] = dup_range[key]
 
     for key in dup_range:
-        if dup_range[key] >= 50 and int(key.split('-')[1]) > 9:
+        if dup_range[key] >= 50 and (int(key.split('-')[1]) - int(key.split('-')[0])) > 2:
             splitted = key.split('-')
             access_freq_range(dic_duplicated, type, fn + 1, int(splitted[0]), (int(splitted[1])/5)-1)
 
