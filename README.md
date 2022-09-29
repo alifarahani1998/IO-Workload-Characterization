@@ -3,13 +3,13 @@
 
 1- Draw characterization diagrams (visual results):
   
-  1.1- Basic diagrams:
-    Including:
-      a) Read/Write percentage --> 2-D pie chart
-      b) Read/Write percentage --> 3-D pie chart
-      c) Distribution of I/O sizes --> Total R/W
-      d) Distribution of I/O sizes --> Separated R/W
-      e) Access frequency distribution
+  1.1- Basic diagrams:__
+    Including:__
+      a) Read/Write percentage --> 2-D pie chart__
+      b) Read/Write percentage --> 3-D pie chart__
+      c) Distribution of I/O sizes --> Total R/W__
+      d) Distribution of I/O sizes --> Separated R/W__
+      e) Access frequency distribution__
       f) Access frequency --> Cumulative Distribution Funtion (CDF)
       
     *** How to run:
@@ -21,12 +21,12 @@
                   |---> output: /path/to/source_code/results/diagram_results
                   
                   
-  1.2- Resource utilization diagrams:
-    Including:
-      a) I/O bandwidth
-      b) Disk utilization
-      c) CPU utilization
-      d) GPU utilization
+  1.2- Resource utilization diagrams:__
+    Including:__
+      a) I/O bandwidth__
+      b) Disk utilization__
+      c) CPU utilization__
+      d) GPU utilization__
       
     *** How to run:
         cd /path/to/source_code/tools/resource_utilization
@@ -37,21 +37,21 @@
                   |---> output: /path/to/source_code/results/diagram_results  
                   
                   
-2- Get textual results (.txt & .csv):
-    Including:
-      a) Number of Read requests
-      b) Number of Write requests
-      c) Read size
-      d) Write size
-      e) Total requests size (R + W)
-      f) R/W percentage
-      g) MAX/MIN requested addresses
-      h) AVG Read and Write
-      i) Distribution of I/O Requests (total R/W)
-      j) Distribution of I/O Requests (Read)
-      k) Distribution of I/O Requests (Write)
-      l) Access frequency --> Cumulative Distribution Funtion (CDF)
-      m) Access frequency of each address --> .csv file
+2- Get textual results (.txt & .csv):__
+    Including:__
+      a) Number of Read requests__
+      b) Number of Write requests__
+      c) Read size__
+      d) Write size__
+      e) Total requests size (R + W)__
+      f) R/W percentage__
+      g) MAX/MIN requested addresses__
+      h) AVG Read and Write__
+      i) Distribution of I/O Requests (total R/W)__
+      j) Distribution of I/O Requests (Read)__
+      k) Distribution of I/O Requests (Write)__
+      l) Access frequency --> Cumulative Distribution Funtion (CDF)__
+      m) Access frequency of each address --> .csv file__
       
       
     *** How to run:
