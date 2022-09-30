@@ -92,7 +92,7 @@ def sectors_to_tb(value):
 
 
 def compare_size(value):
-    if value >= 1 and value <= 4:
+    if value >= 0 and value <= 4:
         return '1-4'
     elif value >= 5 and value <= 8:
         return '5-8'
