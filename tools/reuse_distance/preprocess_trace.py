@@ -14,7 +14,7 @@ with open('%s' %input_file, 'r') as f:
     lines = f.read().splitlines()
 
 for line in lines:
-    if 'F' not in line and '+' in line and 'maj/min' not in line:
+    if 'F' not in line and 'N' not in line and 'M' not in line and '+' in line and 'maj/min' not in line:
         splitted_line = line.split()
         size = int(splitted_line[9])
         if size > 8:
