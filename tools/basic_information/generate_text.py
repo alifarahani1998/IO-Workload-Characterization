@@ -114,6 +114,7 @@ def compare_size(value):
     elif value > 128:
         return '>128'
 
+starting_sectors = []
 
 print('Generating basic results ...')
 
@@ -129,23 +130,20 @@ for index in df.index:
             read_sectors += int(df['#sectors'][index])
             read_count += 1
             read_range[compare_size(temp)] += 1
+            starting_sectors.append(df['start_sector'][index])
         elif 'W' in df['R/W'][index] and 'M' not in df['R/W'][index]:
             write_sectors += int(df['#sectors'][index])                        
             write_count += 1
             write_range[compare_size(temp)] += 1
+            starting_sectors.append(df['start_sector'][index])
         
         sector_range[compare_size(temp)] += 1
          
 total_requests = read_count + write_count
 
-starting_sectors = list(df['start_sector'])
-
-
-for item in list(starting_sectors):
-    if item == '0' or item == '' or re.match('^.*[a-zA-Z]+.*', item) or '[' in item:
-        starting_sectors.remove(item)
-
 starting_sectors = [int(i) for i in starting_sectors]
+
+starting_sectors.sort()
 
 
 # stat for all IOs
@@ -235,10 +233,9 @@ print('Generating access_freq results ...')
 
 # access frequency of IOs
 
-sorted_starting_sectors = sorted(starting_sectors)
 dic_duplicated = {}
 
-for item in sorted_starting_sectors:
+for item in starting_sectors:
     if not item in dic_duplicated:
         dic_duplicated[item] = 1
     else:
@@ -258,100 +255,7 @@ with open('../../results/text_results/%s_access_freq_%s.csv' %(app_name, "{:%Y-%
         writer.writerow([key, dic_duplicated[key]])
 
 
-# access frequency results
-
-# def access_freq_range(fn, s, i):
-
-#     dup_range = {
-#     '%d-%d' %(s, s+i): 0,
-#     '%d-%d' %((s+i+1), (s+2*i+1)): 0,
-#     '%d-%d' %((s+2*i+2), (s+3*i+2)): 0,
-#     '%d-%d' %((s+3*i+3), (s+4*i+3)): 0,
-#     '%d-%d' %((s+4*i+4), (s+5*i+4)): 0,
-#     '%d-%d' %((s+5*i+5), (s+6*i+5)): 0,
-#     '>%d' %(s+6*i+5): 0
-#     }
-
-
-#     for key in dic_duplicated:
-#         if dic_duplicated[key] >= s and dic_duplicated[key] <= (s+i):
-#             dup_range['%d-%d' %(s, s+i)] += 1
-#         elif dic_duplicated[key] >= (s+i+1) and dic_duplicated[key] <= (s+2*i+1):
-#             dup_range['%d-%d' %((s+i+1), (s+2*i+1))] += 1
-#         elif dic_duplicated[key] >= (s+2*i+2) and dic_duplicated[key] <= (s+3*i+2):
-#             dup_range['%d-%d' %((s+2*i+2), (s+3*i+2))] += 1
-#         elif dic_duplicated[key] >= (s+3*i+3) and dic_duplicated[key] <= (s+4*i+3):
-#             dup_range['%d-%d' %((s+3*i+3), (s+4*i+3))] += 1
-#         elif dic_duplicated[key] >= (s+4*i+4) and dic_duplicated[key] <= (s+5*i+4):
-#             dup_range['%d-%d' %((s+4*i+4), (s+5*i+4))] += 1
-#         elif dic_duplicated[key] >= (s+5*i+5) and dic_duplicated[key] <= (s+6*i+5):
-#             dup_range['%d-%d' %((s+5*i+5), (s+6*i+5))] += 1
-#         elif dic_duplicated[key] > (s+6*i+5):
-#             dup_range['>%d' %(s+6*i+5)] += 1
-
-#     for key in dup_range:
-#         dup_range[key] = round(dup_range[key] / len(dic_duplicated) * 100, 1)
-
-
-#     with open('../../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'a') as f:
-#         f.write('\n\n\t***Access Frequency Distribution***\n')
-#         f.write('\tFrequency Range\t\tDistribution of Range (%)\n\t---------------\t\t-------------------------\n')
-#         f.write('\t    [%d-%d]\t\t\t%0.1f\n' %(s, s+i, dup_range['%d-%d' %(s, s+i)]))
-#         f.write('\t    [%d-%d]\t\t\t%0.1f\n' %((s+i+1), (s+2*i+1), dup_range['%d-%d' %((s+i+1), (s+2*i+1))]))
-#         f.write('\t    [%d-%d]\t\t\t%0.1f\n' %((s+2*i+2), (s+3*i+2), dup_range['%d-%d' %((s+2*i+2), (s+3*i+2))]))
-#         f.write('\t    [%d-%d]\t\t\t%0.1f\n' %((s+3*i+3), (s+4*i+3), dup_range['%d-%d' %((s+3*i+3), (s+4*i+3))]))
-#         f.write('\t    [%d-%d]\t\t\t%0.1f\n' %((s+4*i+4), (s+5*i+4), dup_range['%d-%d' %((s+4*i+4), (s+5*i+4))]))
-#         f.write('\t    [%d-%d]\t\t\t%0.1f\n' %((s+5*i+5), (s+6*i+5), dup_range['%d-%d' %((s+5*i+5), (s+6*i+5))]))
-#         f.write('\t    [>%d]\t\t\t%0.1f\n\n\n\n' %((s+6*i+5), dup_range['>%d' %(s+6*i+5)]))
-
-#     for key in dup_range:
-#         if dup_range[key] >= 50 and int(key.split('-')[1]) > 9:
-#             splitted = key.split('-')
-#             access_freq_range(fn + 1, int(splitted[0]), (int(splitted[1])/5)-1)
-
-# access_freq_range(1, 1, 49)
-
-
-# print('Generating reuse_distance results ...')
-
-
-# reuse distance
-
-# reuse_dis_dic = {}   # dictionary of lists >> key shows address and values show reuse distance
-# reuse_dis_stack = deque()
-
-# for item in starting_sectors:
-#     counter = 0
-#     temp_list = []
-#     for i in reuse_dis_stack:
-#         if i == item:
-#             while reuse_dis_stack[-1] != item:
-#                 temp_list.append(reuse_dis_stack.pop())
-#                 counter += 1
-#             reuse_dis_dic[str(item)].append(counter)
-#             reuse_dis_stack.pop()
-#             temp_list.reverse()
-#             for j in temp_list:
-#                 reuse_dis_stack.append(j)
-#             reuse_dis_stack.append(item)
-#             break
-#     if counter == 0:
-#         reuse_dis_dic[str(item)] = [-1]
-#         reuse_dis_stack.append(item)
-
-
-# for key, value in list(reuse_dis_dic.items()):
-#     if value == [-1]:
-#         del reuse_dis_dic[key]
-#     else:
-#         value.remove(-1)
-
-
-# with open('../../results/text_results/%s_reuse_dis_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
-#     for key in reuse_dis_dic:
-#         f.write('%s: %s\n' %(key, reuse_dis_dic[key]))
-
 
 with open('../../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'r+') as f: s = f.read(); f.seek(0); f.write('*** Total execution time: %0.1f seconds ***\n\n' %round(time.time() - start_time, 2) + s)
 
-print('Total execution time: %0.1f seconds: ' %round(time.time() - start_time, 2))
+print('Total execution time: %0.1f seconds' %round(time.time() - start_time, 2))

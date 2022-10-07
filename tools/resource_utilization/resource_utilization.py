@@ -36,4 +36,4 @@ if gpustat_file != 'no':
     gpu.gpu_utilization(gpustat_file, min_hour_input, int(interval_input))
 
 
-print('Total execution time: %0.1f seconds: ' %round(time.time() - start_time, 2))
+print('Total execution time: %0.1f seconds' %round(time.time() - start_time, 2))

@@ -113,16 +113,10 @@ def compare_size(value):
     elif value > 128:
         return '>128'
 
+
+starting_sectors = []
 read_starting_sectors = []
 write_starting_sectors = []
-
-for index in df.index:
-
-    if 'R' in df['R/W'][index] and 'M' not in df['R/W'][index]:
-        read_starting_sectors.append(df['start_sector'][index])
-    elif 'W' in df['R/W'][index] and 'M' not in df['R/W'][index]:
-        write_starting_sectors.append(df['start_sector'][index])
-
 
 # size of individual IOs
 
@@ -135,34 +129,23 @@ for index in df.index:
         if 'R' in df['R/W'][index] and 'M' not in df['R/W'][index]:
             read_count += 1
             read_range[compare_size(temp)] += 1
+            read_starting_sectors.append(df['start_sector'][index])
+            starting_sectors.append(df['start_sector'][index])
         elif 'W' in df['R/W'][index] and 'M' not in df['R/W'][index]:
             write_count += 1
             write_range[compare_size(temp)] += 1
+            write_starting_sectors.append(df['start_sector'][index])
+            starting_sectors.append(df['start_sector'][index])
         
         sector_range[compare_size(temp)] += 1
          
 total_requests = read_count + write_count
 
 
-starting_sectors = list(df['start_sector'])
-
-for item in list(starting_sectors):
-    if item == '0' or item == '' or re.match('^.*[a-zA-Z]+.*', item) or '[' in item:
-        starting_sectors.remove(item)
 
 starting_sectors = [int(i) for i in starting_sectors]
 
-#######################################################
-for item in list(read_starting_sectors):
-    if item == '0' or item == '' or re.match('^.*[a-zA-Z]+.*', item) or '[' in item:
-        read_starting_sectors.remove(item)
-
 read_starting_sectors = [int(i) for i in read_starting_sectors]
-
-#######################################################
-for item in list(write_starting_sectors):
-    if item == '0' or item == '' or re.match('^.*[a-zA-Z]+.*', item) or '[' in item:
-        write_starting_sectors.remove(item)
 
 write_starting_sectors = [int(i) for i in write_starting_sectors]
 
@@ -461,4 +444,4 @@ def cdf_diagram():
 
 cdf_diagram()
 
-print('Total execution time: %0.1f seconds: ' %round(time.time() - start_time, 2))
+print('Total execution time: %0.1f seconds' %round(time.time() - start_time, 2))

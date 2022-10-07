@@ -3,14 +3,13 @@ import time
 from datetime import datetime
 
 
-input_file = input('Enter reuse (input) file path: ')
+input_file = input('Enter reuse output path: ')
 now = datetime.now()
 start_time = time.time()
 
 print('Retrieving data ...')
 
 df = pd.read_table('%s' %input_file, header=0, usecols=['average_size_rd', 'average_time_rd', 'max_size', 'max_time', 'min_size', 'min_time'], delim_whitespace=True, dtype=str, na_filter=False)
-
 
 
 def byte_to_kb(value):
@@ -37,8 +36,6 @@ total_min_time = 0
 
 print('Generating results ...')
 
-# size of individual IOs
-
 for index in df.index:
         
     if df['average_size_rd'][index] != '' and df['average_time_rd'][index] != '':
@@ -54,17 +51,17 @@ for index in df.index:
         total_min_size += float(df['min_size'][index])
         total_min_time += float(df['min_time'][index])
          
-print('Total requests: ', total_requests)
-print('Total avg size: %s GB' % str(byte_to_gb(total_avg_size/total_requests)))
-print('Total avg time: %s ns' % str(round(total_avg_time/total_requests, 1)))
+
+print('avg size: %s GB' % str(byte_to_gb(total_avg_size/total_requests)))
+print('avg time: %s ns' % str(round(total_avg_time/total_requests, 1)))
 
 
-print('Total max size: %s GB' % str(byte_to_gb(total_max_size/total_requests)))
-print('Total max time: %s ns' % str(round(total_max_time/total_requests, 1)))
+print('max size: %s GB' % str(byte_to_gb(total_max_size/total_requests)))
+print('max time: %s ns' % str(round(total_max_time/total_requests, 1)))
 
 
-print('Total min size: %s GB' % str(byte_to_gb(total_min_size/total_requests)))
-print('Total min time: %s ns' % str(round(total_min_time/total_requests, 1)))
+print('min size: %s GB' % str(byte_to_gb(total_min_size/total_requests)))
+print('min time: %s ns' % str(round(total_min_time/total_requests, 1)))
 
 max_size = byte_to_gb(total_max_size/total_requests)
 avg_size = byte_to_gb(total_avg_size/total_requests)
@@ -117,12 +114,14 @@ ax.tick_params(axis='x', length=0, labelsize=12)
 xlocs = np.arange(len(y) + 1) - 0.5
 ax.set_xticks(xlocs, minor=True)
 ax.set_ylim([0, max(y) + 3])
-ax.set_title('Cache size vs Reuse time', fontweight='bold', fontsize=15.0)
-ax.set_ylabel('Cache size (GB)', fontweight='bold', fontsize=15.0)
-ax.set_xlabel('Reuse time (ns)', fontweight='bold', fontsize=15.0)
+ax.set_title('Cache Size vs Reuse Time', fontweight='bold', fontsize=15.0)
+ax.set_ylabel('Cache Size (GB)', fontweight='bold', fontsize=15.0)
+ax.set_xlabel('Reuse Time (ns)', fontweight='bold', fontsize=15.0)
 # ax.legend()
 ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,
             verticalalignment='top', bbox=props)
 plt.tight_layout()
 plt.gcf().set_size_inches(12, 6)
 plt.show()
+
+print('Total execution time: %0.1f seconds' %round(time.time() - start_time, 2))
