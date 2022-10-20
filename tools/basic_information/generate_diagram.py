@@ -238,8 +238,8 @@ x = np.arange(len(labels))  # the label locations
 width = 0.4  # the width of the bars
 plt.rcParams.update({'font.size': 14.0, 'font.weight': 'bold'})
 fig, ax = plt.subplots()
-rects1 = ax.bar(x - width/2, read_means, width, label='READ', color='navy')
-rects2 = ax.bar(x + width/2, write_means, width, label='WRITE', color='orange')
+rects1 = ax.bar(x - width/2, read_means, width, label='Read', color='navy')
+rects2 = ax.bar(x + width/2, write_means, width, label='Write', color='orange')
 
 # Add some text for labels, title and custom x-axis tick labels, etc.
 ax.set_ylabel('Frequency (%)', fontweight='bold', fontsize=20.0)
