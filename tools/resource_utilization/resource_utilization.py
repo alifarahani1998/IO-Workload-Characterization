@@ -3,6 +3,7 @@ import os
 import disk_utilization as disk
 import cpu_utilization as cpu
 import gpu_utilization as gpu
+import cpu_bandwidth as cb
 
 
 iostat_file = input('Enter iostat file path: ')
@@ -32,6 +33,8 @@ print('Retrieving data ...')
 disk.draw_io_bandwidth(iostat_file, min_hour_input, int(interval_input))
 disk.disk_utilization(iostat_file, min_hour_input, int(interval_input))
 cpu.cpu_utilization(iostat_file, min_hour_input, int(interval_input))
+cb.cpu_bandwidth(iostat_file, min_hour_input, int(interval_input))
+
 if gpustat_file != 'no':
     gpu.gpu_utilization(gpustat_file, min_hour_input, int(interval_input))
 
