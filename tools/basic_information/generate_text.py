@@ -194,10 +194,16 @@ with open('../../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y
 
 
 for key in read_range:
-    read_range[key] = round(read_range[key] / read_count * 100, 1)
+    if read_count != 0:
+        read_range[key] = round(read_range[key] / read_count * 100, 1)
+    else:
+        read_range[key] = 0
 
 for key in write_range:
-    write_range[key] = round(write_range[key] / write_count * 100, 1)
+    if write_count != 0:
+        write_range[key] = round(write_range[key] / write_count * 100, 1)
+    else:
+        write_range[key] = 0
 
 
 

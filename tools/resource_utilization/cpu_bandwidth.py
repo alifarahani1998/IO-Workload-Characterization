@@ -93,7 +93,7 @@ def cpu_bandwidth(iostat_file, min_hour, interval):
     ax.tick_params(axis='x', labelrotation = 45)
     ax2.set_ylim(0, 100)
     ax.set_ylim(0, max(max(new_read_list), max(new_write_list)) + 5)
-    ax.legend(lns, labs, loc=0)
+    ax.legend(lns, labs, loc='upper right')
     plt.tight_layout()
     plt.gcf().set_size_inches(12, 6)
     plt.savefig('../../results/diagram_results/cpu_bandwidth.png', dpi=60) 

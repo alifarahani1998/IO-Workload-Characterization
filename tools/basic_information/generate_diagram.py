@@ -221,10 +221,16 @@ plt.close()
 
 
 for key in read_range:
-    read_range[key] = round(read_range[key] / read_count * 100, 1)
+    if read_count != 0:
+        read_range[key] = round(read_range[key] / read_count * 100, 1)
+    else:
+        read_range[key] = 0
 
 for key in write_range:
-    write_range[key] = round(write_range[key] / write_count * 100, 1)
+    if write_count != 0:
+        write_range[key] = round(write_range[key] / write_count * 100, 1)
+    else:
+        write_range[key] = 0
 
 print('Generating separated_rw_bar diagram ...')
 
@@ -340,7 +346,10 @@ def access_freq_range(dic_duplicated, type, fn, s, i):
             dup_range['>%d' %(s+6*i+5)] += 1
 
     for key in dup_range:
-        dup_range[key] = round(dup_range[key] / len(dic_duplicated) * 100, 1)
+        if len(dic_duplicated) != 0:
+            dup_range[key] = round(dup_range[key] / len(dic_duplicated) * 100, 1)
+        else:
+            dup_range[key] = 0
 
 
     plt.rcParams.update({'font.size': 15.0, 'font.weight': 'bold'})

@@ -1,0 +1,78 @@
+compute2                          Thu Nov 10 12:43:38 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 29°C,  31 %,   0 % (E:   0 %  D:   0 %),   ?? /  ?? W |     0 /  7982 MB |
+compute2                          Thu Nov 10 12:43:58 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 29°C,  31 %,   0 % (E:   0 %  D:   0 %),   ?? /  ?? W |     0 /  7982 MB |
+compute2                          Thu Nov 10 12:44:17 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 30°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:44:37 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 31°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:44:57 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 31°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:45:17 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 32°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:45:37 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 32°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:45:58 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 32°C,  31 %,   2 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:46:18 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 32°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:46:38 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 32°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:46:58 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 33°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:47:18 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 33°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:47:38 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 33°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:47:58 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 33°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:48:18 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 33°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:48:38 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 33°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:48:58 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 33°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:49:18 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 33°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:49:38 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 33°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:49:58 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 33°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:50:18 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 33°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:50:38 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:50:58 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:51:18 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:51:38 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:51:58 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:52:18 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:52:38 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:52:58 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:53:18 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:53:38 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:53:58 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:54:18 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   2 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:54:38 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:54:58 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:55:18 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:55:38 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:55:58 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
+compute2                          Thu Nov 10 12:56:18 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 34°C,  31 %,   1 % (E:   0 %  D:   0 %),   ?? /  ?? W |  7584 /  7982 MB | root:python/820594(7581M)
