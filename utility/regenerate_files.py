@@ -2,13 +2,13 @@ import os
 import string
 import shutil
 
-path="F:/test/File"
+path = '/mnt/samsung_ssd/fawkes/dataset/4k_human_images'
 os.chdir(path)
 
 
 def copy():
     os.chdir(path)
-    dst_dir = 'F:/test/New_File'
+    dst_dir = '/mnt/samsung_ssd/fawkes/dataset/4k_human_images_1'
     for f in os.listdir(path):
         try:
             shutil.copy(f, dst_dir)
@@ -19,17 +19,18 @@ def copy():
 
 
 alphabet = list(string.ascii_lowercase)
-new_alphabet = ['a', 'b', 'c', 'd']
+new_alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
 
-for letter1 in alphabet:
-    for letter2 in alphabet:
-        for letter3 in new_alphabet:
+for letter1 in new_alphabet:
+#    for letter2 in new_alphabet:
+#        for letter3 in new_alphabet:
             i = 0
             for file in os.listdir(path):
 
-                new_file_name = "%s%s%s%d.jpg" %(letter1, letter2, letter3, i)
+                new_file_name = "%s%d.png" %(letter1, i)
                 os.rename(file, new_file_name)
 
                 i += 1
             print('rename done!')
             copy()
+

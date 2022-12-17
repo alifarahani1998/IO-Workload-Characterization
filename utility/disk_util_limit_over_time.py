@@ -2,7 +2,7 @@ utility_number = 0
 
 iostat_input_file = input('Enter iostat file path: ')
 runtime = input('Enter application runtime in minutes: ')
-util_limit = input('Enter application runtime in minutes: ')
+util_limit = 80
 
 file = open('%s' %iostat_input_file, 'r')
 lines = file.readlines()

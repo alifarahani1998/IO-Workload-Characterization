@@ -146,6 +146,9 @@ starting_sectors = [int(i) for i in starting_sectors]
 starting_sectors.sort()
 
 
+read_percentage = round(sectors_to_gb(read_sectors) / sectors_to_gb(read_sectors + write_sectors), 2)
+write_percentage = round(sectors_to_gb(write_sectors) / sectors_to_gb(read_sectors + write_sectors), 2)
+
 # stat for all IOs
 
 with open('../../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y-%m-%d_%H-%M}".format(now)), 'w') as f:
@@ -154,8 +157,8 @@ with open('../../results/text_results/%s_basic_results_%s.txt' %(app_name, "{:%Y
     f.write('Read size: %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' %(read_sectors, sectors_to_kb(read_sectors), sectors_to_mb(read_sectors), sectors_to_gb(read_sectors), sectors_to_tb(read_sectors)))
     f.write('Write size: %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' %(write_sectors, sectors_to_kb(write_sectors), sectors_to_mb(write_sectors), sectors_to_gb(write_sectors), sectors_to_tb(write_sectors)))
     f.write('Total requests size (Read + Write): %d sectors (%0.1f KB) (%0.1f MB) (%0.1f GB) (%0.1f TB)\n\n' %(read_sectors+write_sectors, sectors_to_kb(read_sectors+write_sectors), sectors_to_mb(read_sectors+write_sectors), sectors_to_gb(read_sectors+write_sectors), sectors_to_tb(read_sectors+write_sectors)))
-    f.write('Read percentage: {:.1%}\n\n'.format(read_count / total_requests))
-    f.write('Write percentage: {:.1%}\n\n'.format(write_count / total_requests))
+    f.write('Read percentage: {:.1%}\n\n'.format(read_percentage))
+    f.write('Write percentage: {:.1%}\n\n'.format(write_percentage))
 
     if read_count != 0:
         f.write('Average Read size: %0.1f KB\n\n' %sectors_to_kb(read_sectors / read_count))

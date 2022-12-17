@@ -4,7 +4,7 @@ import numpy as np
 import time
 import re
 import os
-from scipy.interpolate import make_interp_spline, BSpline
+from scipy.interpolate import make_interp_spline
 from pygooglechart import PieChart3D
 
 
@@ -29,7 +29,8 @@ print('Retrieving data ...')
 
 df = pd.read_table('%s' %input_file, header=0, usecols=['R/W', 'start_sector', '#sectors'], delim_whitespace=True, dtype=str, na_filter=False)
 
-
+read_sectors = 0
+write_sectors = 0
 read_count = 0
 write_count = 0
 
@@ -127,11 +128,13 @@ for index in df.index:
         temp = sectors_to_kb(int(df['#sectors'][index]))
 
         if 'R' in df['R/W'][index] and 'M' not in df['R/W'][index]:
+            read_sectors += int(df['#sectors'][index])
             read_count += 1
             read_range[compare_size(temp)] += 1
             read_starting_sectors.append(df['start_sector'][index])
             starting_sectors.append(df['start_sector'][index])
         elif 'W' in df['R/W'][index] and 'M' not in df['R/W'][index]:
+            write_sectors += int(df['#sectors'][index])
             write_count += 1
             write_range[compare_size(temp)] += 1
             write_starting_sectors.append(df['start_sector'][index])
@@ -156,9 +159,12 @@ write_starting_sectors.sort()
 
 print('Generating 2D pie diagram ...')
 
+read_percentage = round(sectors_to_gb(read_sectors) / sectors_to_gb(read_sectors + write_sectors), 2)
+write_percentage = round(sectors_to_gb(write_sectors) / sectors_to_gb(read_sectors + write_sectors), 2)
+
 # 2d Pie chart
 labels = ['Read', 'Write']
-sizes = [read_count, write_count]
+sizes = [read_percentage, write_percentage]
 
 fig1, ax1 = plt.subplots()
 ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, textprops={'fontsize': 20}, colors=['#0000ff', '#ff0000'])
@@ -176,12 +182,12 @@ print('Generating 3D pie diagram ...')
 
 chart = PieChart3D(600, 300)
 
-chart.add_data([read_count, write_count])
+chart.add_data([read_percentage, write_percentage])
 
 chart.set_colours(['1e12c4', 'db2121'])
 chart.title = 'Read/Write Percentage'
 
-chart.set_pie_labels(['Read: {:.1%}'.format(read_count / total_requests), 'Write: {:.1%}'.format(write_count / total_requests)])
+chart.set_pie_labels(['Read: {:.1%}'.format(read_percentage), 'Write: {:.1%}'.format(write_percentage)])
 chart.set_title_style(font_size=20)
 try:
     chart.download('../../results/diagram_results/3d_pie.png')
@@ -429,19 +435,46 @@ def cdf_diagram():
     y2 = (sorted(read_cdf_dic.values()))
     y3 = (sorted(write_cdf_dic.values()))
 
-    xnew1 = np.linspace(min(x1), max(x1), 100) 
-    xnew2 = np.linspace(min(x2), max(x2), 100) 
-    xnew3 = np.linspace(min(x3), max(x3), 100) 
+    try:
+        xnew1 = np.linspace(min(x1), max(x1), 100)
+    except:
+        xnew1 = 0 
+    try:
+        xnew2 = np.linspace(min(x2), max(x2), 100)
+    except:
+        xnew2 = 0
+    try:
+        xnew3 = np.linspace(min(x3), max(x3), 100)
+    except:
+        xnew3 = 0
 
-    spl1 = make_interp_spline(x1, y1, k=1) 
-    spl2 = make_interp_spline(x2, y2, k=1) 
-    spl3 = make_interp_spline(x3, y3, k=1)  
+    try:
+        spl1 = make_interp_spline(x1, y1, k=1)
+    except:
+        spl1 = 0 
+    try:
+        spl2 = make_interp_spline(x2, y2, k=1)
+    except:
+        spl2 = 0 
+    try:
+        spl3 = make_interp_spline(x3, y3, k=1) 
+    except:
+        spl3 = 0 
 
-    ynew1 = spl1(xnew1)
-    ynew2 = spl2(xnew2)
-    ynew3 = spl3(xnew3)
+    try:
+        ynew1 = spl1(xnew1)
+    except:
+        ynew1 = 0
+    try:
+        ynew2 = spl2(xnew2)
+    except:
+        ynew2 = 0
+    try:
+        ynew3 = spl3(xnew3)
+    except:
+        ynew3 = 0
 
-    plt.grid()
+    
     ax.set_ylim([0, 101])
     plt.plot(xnew1, ynew1, '-', color='green', linewidth=3.0, label='total R/W')
     plt.plot(xnew2, ynew2, '--', color='blue', linewidth=3.0, label='Read')

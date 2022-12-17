@@ -76,7 +76,7 @@ def cpu_bandwidth(iostat_file, min_hour, interval):
     lns = lns1+lns2+lns3
     labs = [l.get_label() for l in lns]
 
-    ax.grid()
+    
 
     props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
 

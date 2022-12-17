@@ -129,7 +129,7 @@ import numpy as np
 
 print('Retrieving data ...')
 
-df = pd.read_table('data/lirec_none_trace.txt', header=0, usecols=['time', 'event', 'R/W'], delim_whitespace=True, dtype=str, na_filter=False)
+df = pd.read_table('../data/lirec_none_trace.txt', header=0, usecols=['time', 'event', 'R/W'], delim_whitespace=True, dtype=str, na_filter=False)
 
 # for i in range(df.shape[0] - 1, -1, -1):
 #     rowSeries = df.iloc[i]
@@ -199,4 +199,4 @@ plt.grid()
 plt.xlabel('Time (s)', fontweight='bold', fontsize=15.0)
 plt.gcf().set_size_inches(12, 2.2)
 plt.tight_layout()
-plt.savefig('../results/io_timeline.png') 
+plt.savefig('../io_timeline.png') 
