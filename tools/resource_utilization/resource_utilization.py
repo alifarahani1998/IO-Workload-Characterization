@@ -3,11 +3,13 @@ import os
 import disk_utilization as disk
 import cpu_utilization as cpu
 import gpu_utilization as gpu
-import cpu_bandwidth as cb
+import cpu_io_bandwidth as cb
+import ram_usage as rm
 
 
 iostat_file = input('Enter iostat file path: ')
 gpustat_file = input('Enter gpustat file path (if not desired, type no): ')
+ram_file = input('Enter ram_usage file path (if not desired, type no): ')
 min_hour_input = input('Enter time format (h/m): ')
 if min_hour_input == 'h':
     min_hour_input = 'h'
@@ -37,6 +39,8 @@ cb.cpu_bandwidth(iostat_file, min_hour_input, int(interval_input))
 
 if gpustat_file != 'no':
     gpu.gpu_utilization(gpustat_file, min_hour_input, int(interval_input))
+if ram_file != 'no':
+    rm.ram_usage(ram_file, min_hour_input, int(interval_input))
 
 
 print('Total execution time: %0.1f seconds' %round(time.time() - start_time, 2))

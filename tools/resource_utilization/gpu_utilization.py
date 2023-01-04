@@ -15,7 +15,7 @@ def gpu_utilization(gpustat_file, min_hour, interval):
     lines = file.readlines()
     for i, line in enumerate(lines):
         if 'NVIDIA' in line:
-            gpu_util.append(float((lines[i].split())[10]))
+            gpu_util.append(float((lines[i].split())[8]))
 
 
     avg_gpu_util = round(sum(gpu_util) / len(gpu_util), 2)
