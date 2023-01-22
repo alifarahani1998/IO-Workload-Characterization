@@ -16,7 +16,10 @@ def ram_usage(ram_usage_file, min_hour, interval):
     for i, line in enumerate(lines):
         if 'Mem' in line:
             total_ram = float((lines[i].split())[1].removesuffix('Gi'))
-            ram_usage.append(float((lines[i].split())[2].removesuffix('Gi')))
+            if 'Mi' in (lines[i].split())[2]:
+                ram_usage.append(float((lines[i].split())[2].removesuffix('Mi')))
+            else:
+                ram_usage.append(float((lines[i].split())[2].removesuffix('Gi')))
 
 
     avg_ram_usage = round(sum(ram_usage) / len(ram_usage), 2)
