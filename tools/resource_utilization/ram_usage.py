@@ -72,4 +72,3 @@ def ram_usage(ram_usage_file, min_hour, interval):
     plt.savefig('../../results/diagram_results/ram_usage.png', dpi=60) 
     plt.close()
 
-ram_usage('ram_usage.txt', 'm', 100)
