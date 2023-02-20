@@ -59,9 +59,9 @@ def ram_usage(ram_usage_file, min_hour, interval):
     props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
 
     textstr = '\n'.join((
-        'Avg. RAM Usage: %1.1fGB' %avg_ram_usage + '%',
-        'MAX RAM Usage: %1.1fGB' %max_ram_usage + '%',
-        'MIN RAM Usage: %1.1fGB' %min_ram_usage + '%',
+        'Avg. RAM Usage: %1.1fGB' %avg_ram_usage,
+        'MAX RAM Usage: %1.1fGB' %max_ram_usage,
+        'MIN RAM Usage: %1.1fGB' %min_ram_usage,
     ))
 
     ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,

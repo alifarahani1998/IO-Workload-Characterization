@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 
 
-# cpu utilization diagram
-
 def cpu_bandwidth(iostat_file, min_hour, interval):
 
     print('Generating CPU/Bandwidth diagram ...')
@@ -19,7 +17,6 @@ def cpu_bandwidth(iostat_file, min_hour, interval):
             cpu_util.append(float((lines[i+1].split())[0]))
         if 'rMB/s' in line:
             read_list.append(float((lines[i+1].split())[2]))
-        if 'wMB/s' in line:
             write_list.append(float((lines[i+1].split())[8]))
 
 

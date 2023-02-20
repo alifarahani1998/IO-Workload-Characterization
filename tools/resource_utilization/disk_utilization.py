@@ -17,7 +17,6 @@ def draw_io_bandwidth(iostat_file, min_hour, interval):
     for i, line in enumerate(lines):
         if 'rMB/s' in line:
             read_list.append(float((lines[i+1].split())[2]))
-        if 'wMB/s' in line:
             write_list.append(float((lines[i+1].split())[8]))
 
 

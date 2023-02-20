@@ -5,6 +5,8 @@ import cpu_utilization as cpu
 import gpu_utilization as gpu
 import cpu_io_bandwidth as cb
 import ram_usage as rm
+import iops as ips
+import cpu_gpu_disk as cgd
 
 
 iostat_file = input('Enter iostat file path: ')
@@ -34,11 +36,13 @@ print('Retrieving data ...')
 
 disk.draw_io_bandwidth(iostat_file, min_hour_input, int(interval_input))
 disk.disk_utilization(iostat_file, min_hour_input, int(interval_input))
+ips.iops(iostat_file, min_hour_input, int(interval_input))
 cpu.cpu_utilization(iostat_file, min_hour_input, int(interval_input))
 cb.cpu_bandwidth(iostat_file, min_hour_input, int(interval_input))
 
 if gpustat_file != 'no':
     gpu.gpu_utilization(gpustat_file, min_hour_input, int(interval_input))
+    cgd.cpu_gpu_disk(iostat_file, gpustat_file, min_hour_input, int(interval_input))
 if ram_file != 'no':
     rm.ram_usage(ram_file, min_hour_input, int(interval_input))
 
