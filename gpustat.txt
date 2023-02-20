@@ -1,0 +1,36 @@
+compute3                          Mon Dec 19 18:33:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 60'C,  68 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:34:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 68'C,  57 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:35:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 72'C,  77 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:36:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 73'C,  80 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:37:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 73'C,  67 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:38:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 73'C,  58 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:39:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 70'C,  59 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:40:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 72'C,  88 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:41:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 73'C,  75 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:42:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 72'C,  65 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:43:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 70'C,  71 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:44:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 72'C,  85 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:45:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 73'C,  58 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:46:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 73'C,  74 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:47:32 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 72'C,  67 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:48:33 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 73'C,  85 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:49:33 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 73'C,  67 % |  3712 /  7982 MB | root(3709M)
+compute3                          Mon Dec 19 18:50:33 2022  465.19.01
+[0] NVIDIA GeForce RTX 2070 SUPER | 73'C,  67 % |  3712 /  7982 MB | root(3709M)
